@@ -1,10 +1,9 @@
 <?php
 
-use Grimarina\CityBike\http\Request;
-use Grimarina\CityBike\http\ErrorResponse;
+use Grimarina\CityBike\http\{Request, ErrorResponse};
 use Grimarina\CityBike\Exceptions\HttpException;
-use Grimarina\CityBike\http\Actions\ImportStations;
-use Grimarina\CityBike\Repositories\StationsRepository;
+use Grimarina\CityBike\http\Actions\{ImportStations, ImportTrips};
+use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -24,7 +23,8 @@ try {
 }
 
 $routes = [
-    '/stations/import' => new ImportStations(__DIR__ . '/data/stations.csv', new StationsRepository($pdo))
+    '/stations/import' => new ImportStations(__DIR__ . '/data/stations.csv', new StationsRepository($pdo)),
+    '/trips/import' => new ImportTrips(__DIR__ . '/data/trips-2021-05.csv', new TripsRepository($pdo)),
 ];
 
 if (!array_key_exists($path, $routes)) {
