@@ -1,0 +1,17 @@
+{
+    "name": "grimarina/city_bike",
+    "autoload": {
+        "psr-4": {
+            "Grimarina\\CityBike\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Marina Grigoreva",
+            "email": "mgrigoreva12@gmail.com"
+        }
+    ],
+    "require": {
+        "league/csv": "^9.8"
+    }
+}
