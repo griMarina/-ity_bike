@@ -92,4 +92,65 @@ class StationsRepositoryTest extends TestCase
 
         $this->stationRepository->importCsv($csv);
     }
+
+    public function testGetAllReturnsExpectedData()
+    {
+        // Set the expected query and return values for the statement object
+        $this->statementMock
+            ->expects($this->once())
+            ->method('execute')
+            ->willReturn(true);
+
+        $this->statementMock
+            ->expects($this->once())
+            ->method('fetchAll')
+            ->with(\PDO::FETCH_ASSOC)
+            ->willReturn([
+                [
+                    'id' => 1,
+                    'name_fi' => 'Station A',
+                    'address_fi' => 'Address A',
+                    'capacity' => 10,
+                    'coordinate_x' => 60.123456,
+                    'coordinate_y' => 24.123456,
+                ],
+                [
+                    'id' => 2,
+                    'name_fi' => 'Station B',
+                    'address_fi' => 'Address B',
+                    'capacity' => 20,
+                    'coordinate_x' => 60.654321,
+                    'coordinate_y' => 24.654321,
+                ],
+            ]);
+
+        // Set the mock statement object to be returned by the mock PDO object
+        $this->connectionStub
+            ->expects($this->once())
+            ->method('prepare')
+            ->with("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT 10;")
+            ->willReturn($this->statementMock);
+
+        // Call the getAll method and assert that it returns the expected data
+        $expected = [
+            [
+                'id' => 1,
+                'name_fi' => 'Station A',
+                'address_fi' => 'Address A',
+                'capacity' => 10,
+                'coordinate_x' => 60.123456,
+                'coordinate_y' => 24.123456,
+            ],
+            [
+                'id' => 2,
+                'name_fi' => 'Station B',
+                'address_fi' => 'Address B',
+                'capacity' => 20,
+                'coordinate_x' => 60.654321,
+                'coordinate_y' => 24.654321,
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->stationRepository->getAll());
+    }
 }

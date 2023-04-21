@@ -2,15 +2,22 @@
 
 use Grimarina\CityBike\http\{Request, ErrorResponse};
 use Grimarina\CityBike\Exceptions\HttpException;
-use Grimarina\CityBike\http\Actions\{ImportStations, ImportTrips};
+use Grimarina\CityBike\http\Actions\{ImportStations, ImportTrips, FindAllStations};
 use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$request = new Request($_GET, $_SERVER);
+$request = new Request($_GET, $_SERVER, file_get_contents('php://input'),);
 
 try {
     $path = $request->path();
+} catch (HttpException) {
+    (new ErrorResponse)->send();
+    return;
+}
+
+try {
+    $method = $request->method();
 } catch (HttpException) {
     (new ErrorResponse)->send();
     return;
@@ -23,16 +30,26 @@ try {
 }
 
 $routes = [
-    '/stations/import' => new ImportStations(__DIR__ . '/data/stations.csv', new StationsRepository($pdo)),
-    '/trips/import' => new ImportTrips(__DIR__ . '/data/trips-2021-05.csv', new TripsRepository($pdo)),
+    'GET' => [
+        '/stations/show' => new FindAllStations(new StationsRepository($pdo)),
+    ],
+    'POST' => [
+        '/stations/import' => new ImportStations(__DIR__ . '/data/stations.csv', new StationsRepository($pdo)),
+        '/trips/import' => new ImportTrips(__DIR__ . '/data/trips-2021-07.csv', new TripsRepository($pdo))
+    ]
 ];
 
-if (!array_key_exists($path, $routes)) {
+if (!array_key_exists($method, $routes)) {
     (new ErrorResponse('Not found'))->send();
     return;
 }
 
-$action = $routes[$path];
+if (!array_key_exists($path, $routes[$method])) {
+    (new ErrorResponse('Not found'))->send();
+    return;
+}
+
+$action = $routes[$method][$path];
 
 try {
     $response = $action->handle($request);

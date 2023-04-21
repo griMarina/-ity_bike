@@ -10,7 +10,7 @@ class Request
     public function __construct(
         private array $get, // $_GET
         private array $server, // $_SERVER
-        // private string $body,
+        private string $body,
     ) {
     }
 
@@ -24,39 +24,38 @@ class Request
     }
 
 
-    // public function jsonBody(): array
-    // {
-    //     try {
-    //         $data = json_decode(
-    //             $this->body,
-    //             associative: true,
-    //             flags: JSON_THROW_ON_ERROR
-    //         );
-    //     } catch (JsonException) {
-    //         throw new HttpException('Cannot decode json body');
-    //     }
+    public function jsonBody(): array
+    {
+        try {
+            $data = json_decode(
+                $this->body,
+                associative: true,
+                flags: JSON_THROW_ON_ERROR
+            );
+        } catch (JsonException) {
+            throw new HttpException('Cannot decode json body');
+        }
 
-    //     if (!is_array($data)) {
-    //         throw new HttpException('Not an array/object in json body');
-    //     }
+        if (!is_array($data)) {
+            throw new HttpException('Not an array/object in json body');
+        }
 
+        return $data;
+    }
 
-    //     return $data;
-    // }
+    public function jsonBodyField(string $field): mixed
+    {
+        $data = $this->jsonBody();
 
-    // public function jsonBodyField(string $field): mixed
-    // {
-    //     $data = $this->jsonBody();
+        if (!array_key_exists($field, $data)) {
+            throw new HttpException("No such field: $field");
+        }
+        if (empty($data[$field])) {
+            throw new HttpException("Empty field: $field");
+        }
 
-    //     if (!array_key_exists($field, $data)) {
-    //         throw new HttpException("No such field: $field");
-    //     }
-    //     if (empty($data[$field])) {
-    //         throw new HttpException("Empty field: $field");
-    //     }
-
-    //     return $data[$field];
-    // }
+        return $data[$field];
+    }
 
     // Method for getting the request path
     public function path(): string

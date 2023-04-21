@@ -4,6 +4,7 @@ namespace Grimarina\CityBike\Repositories;
 
 use League\Csv\Reader;
 use Grimarina\CityBike\Exceptions\InvalidArgumentException;
+use PDO;
 
 class StationsRepository
 {
@@ -38,5 +39,14 @@ class StationsRepository
                 throw new InvalidArgumentException('File contains invalid data');
             }
         }
+    }
+
+    public function getAll(): array
+    {
+        $stmt = $this->pdo->prepare("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT 10;");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

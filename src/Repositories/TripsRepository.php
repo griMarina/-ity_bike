@@ -2,8 +2,8 @@
 
 namespace Grimarina\CityBike\Repositories;
 
-use League\Csv\ResultSet;
 use League\Csv\Reader;
+use League\Csv\ResultSet;
 use League\Csv\Statement;
 use Grimarina\CityBike\Exceptions\InvalidArgumentException;
 
@@ -20,7 +20,7 @@ class TripsRepository
 
         $validCsv = $this->validateCsv($csv);
 
-        $batchSize = 1000; // number of rows to insert in each batch
+        $batchSize = 5000; // number of rows to insert in each batch
         $batch = [];
 
         $stmt = $this->pdo->prepare("INSERT IGNORE INTO trips (departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration) VALUES (:departure, :return, :departure_station_id, :departure_station_name, :return_station_id, :return_station_name, :distance, :duration)");
@@ -41,10 +41,10 @@ class TripsRepository
                 $this->executeBatch($stmt, $batch);
                 $batch = [];
             }
+        }
 
-            if (count($batch) > 0) {
-                $this->executeBatch($stmt, $batch);
-            }
+        if (count($batch) > 0) {
+            $this->executeBatch($stmt, $batch);
         }
     }
 
