@@ -3,6 +3,7 @@
 namespace Grimarina\CityBike\Repositories;
 
 use League\Csv\Reader;
+use Grimarina\CityBike\Exceptions\InvalidArgumentException;
 
 class StationsRepository
 {
@@ -16,7 +17,6 @@ class StationsRepository
         $stmt = $this->pdo->prepare("INSERT INTO stations (id, name_fi, name_sv, name_en, address_fi, address_sv, city_fi, city_sv, operator, capacity, coordinate_x, coordinate_y) VALUES (:id, :name_fi, :name_sv, :name_en, :address_fi, :address_sv, :city_fi, :city_sv, :operator, :capacity, :coordinate_x, :coordinate_y)");
 
         foreach ($csv as $row) {
-
             try {
                 $stmt->execute(
                     [
@@ -35,7 +35,7 @@ class StationsRepository
                     ]
                 );
             } catch (\Error $e) {
-                throw new \ErrorException('File contains invalid data');
+                throw new InvalidArgumentException('File contains invalid data');
             }
         }
     }

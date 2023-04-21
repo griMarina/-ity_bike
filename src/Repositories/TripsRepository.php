@@ -3,6 +3,9 @@
 namespace Grimarina\CityBike\Repositories;
 
 use League\Csv\ResultSet;
+use League\Csv\Reader;
+use League\Csv\Statement;
+use Grimarina\CityBike\Exceptions\InvalidArgumentException;
 
 class TripsRepository
 {
@@ -11,16 +14,18 @@ class TripsRepository
     ) {
     }
 
-    public function importCsv(ResultSet $csv): void
+    public function importCsv(Reader $csv): void
     {
-        ini_set('max_execution_time', 120);
+        ini_set('max_execution_time', 300);
 
-        $batchSize = 5000; // number of rows to insert in each batch
+        $validCsv = $this->validateCsv($csv);
+
+        $batchSize = 1000; // number of rows to insert in each batch
         $batch = [];
 
-        $stmt = $this->pdo->prepare("INSERT INTO trips (departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration) VALUES (:departure, :return, :departure_station_id, :departure_station_name, :return_station_id, :return_station_name, :distance, :duration)");
+        $stmt = $this->pdo->prepare("INSERT IGNORE INTO trips (departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration) VALUES (:departure, :return, :departure_station_id, :departure_station_name, :return_station_id, :return_station_name, :distance, :duration)");
 
-        foreach ($csv as $row) {
+        foreach ($validCsv as $row) {
             $batch[] = [
                 ':departure' => (string) $row['Departure'],
                 ':return' => (string) $row['Return'],
@@ -36,10 +41,10 @@ class TripsRepository
                 $this->executeBatch($stmt, $batch);
                 $batch = [];
             }
-        }
 
-        if (count($batch) > 0) {
-            $this->executeBatch($stmt, $batch);
+            if (count($batch) > 0) {
+                $this->executeBatch($stmt, $batch);
+            }
         }
     }
 
@@ -50,5 +55,19 @@ class TripsRepository
             $stmt->execute($row);
         }
         $this->pdo->commit();
+    }
+
+    public function validateCsv(Reader $csv): ResultSet
+    {
+        $statement = (new Statement())
+            ->where(function (array $row) {
+                if (!isset($row['Duration (sec.)']) || !isset($row['Covered distance (m)'])) {
+                    throw new InvalidArgumentException('File contains invalid data');
+                }
+                return ($row['Duration (sec.)'] >= 10) && ($row['Covered distance (m)'] >= 10);
+            });
+
+        $validCsv = $statement->process($csv);
+        return $validCsv;
     }
 }

@@ -3,22 +3,47 @@
 namespace Repositories;
 
 use PHPUnit\Framework\TestCase;
-use Grimarina\CityBike\Repositories\StationsRepository;
 use League\Csv\Reader;
+use Grimarina\CityBike\Repositories\StationsRepository;
+use Grimarina\CityBike\Exceptions\InvalidArgumentException;
 
 class StationsRepositoryTest extends TestCase
 {
     private $statementMock;
     private $connectionStub;
+    private $stationRepository;
 
     public function setUp(): void
     {
         $this->connectionStub = $this->createStub(\PDO::class);
         $this->statementMock = $this->createMock(\PDOStatement::class);
+        $this->stationRepository = new StationsRepository($this->connectionStub);
     }
     public function testImportCsvInsertsCorrectData()
     {
-        $this->statementMock->expects($this->once())
+
+        // Create a temporary CSV file with correct data
+        $csvData = [
+            ['FID', 'ID', 'Nimi', 'Namn', 'Name', 'Osoite', 'Adress', 'Kaupunki', 'Stad', 'Operaattor', 'Kapasiteet', 'x', 'y'],
+            ['1', '1', 'Test Station 1', 'Test Station 1', 'Test Station 1', 'Test Address 1', 'Test Address 1', 'Test City 1', 'Test City 1', 'Test Operator 1', 10, 10.0000, 20.0000]
+        ];
+
+        $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
+        $csvFile = fopen($csvFilePath, 'w');
+
+        foreach ($csvData as $row) {
+            fputcsv($csvFile, $row);
+        }
+
+        fclose($csvFile);
+
+        // Load temp file into a League\Csv\Reader object
+        $csv = Reader::createFromPath($csvFilePath);
+        $csv->setHeaderOffset(0);
+
+        // Set up expectations for the mock PDOStatement object
+        $this->statementMock
+            ->expects($this->once())
             ->method('execute')
             ->with([
                 ':id' => 1,
@@ -31,31 +56,40 @@ class StationsRepositoryTest extends TestCase
                 ':city_sv' => 'Test City 1',
                 ':operator' => 'Test Operator 1',
                 ':capacity' => 10,
-                ':coordinate_x' => 60.1234,
-                ':coordinate_y' => 24.5678,
+                ':coordinate_x' => 10.0000,
+                ':coordinate_y' => 20.0000,
             ]);
 
         $this->connectionStub->method('prepare')->willReturn($this->statementMock);
 
-        $repository = new StationsRepository($this->connectionStub);
-
-        $csv = Reader::createFromPath('tests/data/stations_valid.csv');
-        $csv->setHeaderOffset(0);
-        $repository->importCsv($csv);
+        // Call the importCsv method with the Reader object
+        $this->stationRepository->importCsv($csv);
     }
 
     public function testImportCsvThrowsExceptionWhenCsvContainsInvalidData()
     {
-        // Create a new StationsRepository object with the mock PDO object
-        $repository = new StationsRepository($this->connectionStub);
+        // Create a CSV file with invalid data
+        $csvData = [
+            ['Invalid'],
+            ['Data']
+        ];
 
-        // Create a mock CSV object with invalid data
-        $csv = Reader::createFromPath('tests/data/stations_invalid.csv');
+        $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
+        $csvFile = fopen($csvFilePath, 'w');
+
+        foreach ($csvData as $row) {
+            fputcsv($csvFile, $row);
+        }
+
+        fclose($csvFile);
+
+        $csv = Reader::createFromPath($csvFilePath);
+        $csv->setHeaderOffset(0);
 
         // Expect an exception to be thrown when the importCsv() method is called
-        $this->expectException(\ErrorException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File contains invalid data');
 
-        $repository->importCsv($csv);
+        $this->stationRepository->importCsv($csv);
     }
 }

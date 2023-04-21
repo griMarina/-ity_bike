@@ -6,11 +6,8 @@ namespace Grimarina\CityBike\http\Actions;
 
 use Grimarina\CityBike\http\{ErrorResponse, Request, Response, SuccessfulResponse};
 use Grimarina\CityBike\Repositories\TripsRepository;
-use Grimarina\CityBike\Exceptions\{ImportException, CsvFileException};
+use Grimarina\CityBike\Exceptions\{ImportException};
 use League\Csv\Reader;
-use League\Csv\Statement;
-use League\Csv\ResultSet;
-
 
 class ImportTrips implements ActionInterface
 {
@@ -23,25 +20,12 @@ class ImportTrips implements ActionInterface
     public function handle(Request $request): Response
     {
         try {
-            $csv = Reader::createFromPath($this->filename, 'r');
+            $csv = Reader::createFromPath($this->filename);
             $csv->setHeaderOffset(0);
-            $validCsv = $this->validateCsv($csv);
-            $this->tripsRepository->importCsv($validCsv);
+            $this->tripsRepository->importCsv($csv);
             return new SuccessfulResponse(['message' => 'CSV file imported successfully']);
         } catch (ImportException $e) {
             return new ErrorResponse($e->getMessage());
         }
-    }
-
-    protected function validateCsv(Reader $csv): ResultSet
-    {
-        $statement = (new Statement())
-            ->offset(1) // Skip header row
-            ->where(function (array $row) {
-                return ($row['Duration (sec.)'] >= 10) && ($row['Covered distance (m)'] >= 10);
-            });
-
-        $validCsv = $statement->process($csv);
-        return $validCsv;
     }
 }
