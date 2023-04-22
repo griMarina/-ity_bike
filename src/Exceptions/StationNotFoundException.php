@@ -2,6 +2,6 @@
 
 namespace Grimarina\CityBike\Exceptions;
 
-class NotFoundException extends \Exception
+class StationNotFoundException extends \Exception
 {
 }

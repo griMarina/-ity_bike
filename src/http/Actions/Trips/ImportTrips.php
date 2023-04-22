@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Grimarina\CityBike\http\Actions;
+namespace Grimarina\CityBike\http\Actions\Trips;
 
 use Grimarina\CityBike\http\{ErrorResponse, Request, Response, SuccessfulResponse};
-use Grimarina\CityBike\Repositories\StationsRepository;
-use Grimarina\CityBike\Exceptions\ImportException;
+use Grimarina\CityBike\Repositories\TripsRepository;
+use Grimarina\CityBike\Exceptions\{ImportException};
+use Grimarina\CityBike\http\Actions\ActionInterface;
 use League\Csv\Reader;
 
-class ImportStations implements ActionInterface
+class ImportTrips implements ActionInterface
 {
-
     public function __construct(
         private string $filename,
-        private StationsRepository $stationsRepository
+        private TripsRepository $tripsRepository
     ) {
     }
 
@@ -23,7 +23,7 @@ class ImportStations implements ActionInterface
         try {
             $csv = Reader::createFromPath($this->filename);
             $csv->setHeaderOffset(0);
-            $this->stationsRepository->importCsv($csv);
+            $this->tripsRepository->importCsv($csv);
             return new SuccessfulResponse(['message' => 'CSV file imported successfully']);
         } catch (ImportException $e) {
             return new ErrorResponse($e->getMessage());

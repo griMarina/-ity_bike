@@ -2,15 +2,66 @@
 
 namespace Grimarina\CityBike\Repositories;
 
+use Grimarina\CityBike\Entities\Station;
 use League\Csv\Reader;
-use Grimarina\CityBike\Exceptions\InvalidArgumentException;
-use PDO;
+use Grimarina\CityBike\Exceptions\{InvalidArgumentException, StationNotFoundException};
 
 class StationsRepository
 {
     public function __construct(
         private \PDO $pdo
     ) {
+    }
+
+    public function getAll(int $page): array
+    {
+
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+
+        $stmt = $this->pdo->prepare("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT :offset, :limit;");
+
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getById(int $id): ?Station
+    {
+        $stmt = $this->pdo->prepare("SELECT 
+        stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y,
+          (
+            SELECT COUNT(DISTINCT id) 
+            FROM trips 
+            WHERE departure_station_id = stations.id
+          ) AS start_trips, 
+          (
+            SELECT COUNT(DISTINCT id) 
+            FROM trips 
+            WHERE return_station_id = stations.id
+          ) AS end_trips
+        FROM 
+          stations
+         WHERE stations.id = :id
+         GROUP BY stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y;");
+
+        $stmt->execute(
+            [
+                ':id' => (int) $id
+            ]
+        );
+
+        $result = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Station::class)[0] ?? null;
+
+        if ($result === null) {
+            $message = "Cannot find station: $id";
+            throw new StationNotFoundException($message);
+        }
+
+        return $result;
     }
 
     public function importCsv(Reader $csv): void
@@ -39,14 +90,5 @@ class StationsRepository
                 throw new InvalidArgumentException('File contains invalid data');
             }
         }
-    }
-
-    public function getAll(): array
-    {
-        $stmt = $this->pdo->prepare("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT 10;");
-
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
