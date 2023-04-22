@@ -5,7 +5,8 @@ namespace Repositories;
 use PHPUnit\Framework\TestCase;
 use League\Csv\Reader;
 use Grimarina\CityBike\Repositories\StationsRepository;
-use Grimarina\CityBike\Exceptions\InvalidArgumentException;
+use Grimarina\CityBike\Exceptions\{InvalidArgumentException, StationNotFoundException};
+use Grimarina\CityBike\Entities\Station;
 
 class StationsRepositoryTest extends TestCase
 {
@@ -95,16 +96,19 @@ class StationsRepositoryTest extends TestCase
 
     public function testGetAllReturnsExpectedData()
     {
-        // Set the expected query and return values for the statement object
-        $this->statementMock
-            ->expects($this->once())
-            ->method('execute')
-            ->willReturn(true);
+        $this->statementMock->expects($this->atLeastOnce())
+            ->method('bindValue')
+            ->withConsecutive(
+                [$this->equalTo(':offset'), $this->equalTo(0), $this->equalTo(\PDO::PARAM_INT)],
+                [$this->equalTo(':limit'), $this->equalTo(20), $this->equalTo(\PDO::PARAM_INT)]
+            );
+        $this->statementMock->expects($this->once())
+            ->method('execute');
 
         $this->statementMock
             ->expects($this->once())
             ->method('fetchAll')
-            ->with(\PDO::FETCH_ASSOC)
+            ->with($this->equalTo(\PDO::FETCH_ASSOC))
             ->willReturn([
                 [
                     'id' => 1,
@@ -124,11 +128,10 @@ class StationsRepositoryTest extends TestCase
                 ],
             ]);
 
-        // Set the mock statement object to be returned by the mock PDO object
         $this->connectionStub
             ->expects($this->once())
             ->method('prepare')
-            ->with("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT 10;")
+            ->with("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT :offset, :limit;")
             ->willReturn($this->statementMock);
 
         // Call the getAll method and assert that it returns the expected data
@@ -151,6 +154,63 @@ class StationsRepositoryTest extends TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $this->stationRepository->getAll());
+        $result = $this->stationRepository->getAll(1);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testGetByIdReturnsStationObjectIfFound()
+    {
+        // Define the return value of the mock PDOStatement's execute method
+        $this->statementMock->expects($this->once())
+            ->method('execute')
+            ->with([':id' => 1])
+            ->willReturn(true);
+
+        // Define the return value of the mock PDOStatement's fetchAll method
+        $this->statementMock->expects($this->once())
+            ->method('fetchAll')
+            ->with(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Station::class)
+            ->willReturn([new Station()]);
+
+        // Configure the mock PDO object to return the mock PDOStatement object when prepare is called
+        $this->connectionStub->expects($this->once())
+            ->method('prepare')
+            ->with("SELECT stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y,
+        (
+            SELECT COUNT(DISTINCT id) 
+            FROM trips
+            WHERE departure_station_id = stations.id
+        ) AS start_trips,
+        (
+            SELECT COUNT(DISTINCT id) 
+            FROM trips
+            WHERE return_station_id = stations.id
+        ) AS end_trips
+        FROM stations
+        WHERE stations.id = :id
+        GROUP BY stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y;")
+            ->willReturn($this->statementMock);
+
+        // Call the getById method with an ID of 1
+        $result = $this->stationRepository->getById(1);
+
+        // Assert that the result is an instance of Station
+        $this->assertInstanceOf(Station::class, $result);
+    }
+
+    public function testGetByIdThrowsExceptionIfStationNotFound()
+    {
+        $this->statementMock->method('execute')->willReturn(null);
+        $this->statementMock->method('fetchAll')->willReturn([]);
+
+        $this->connectionStub->method('prepare')->willReturn($this->statementMock);
+
+        $repository = new StationsRepository($this->connectionStub);
+
+        $this->expectException(StationNotFoundException::class);
+        $this->expectExceptionMessage('Cannot find station: 1');
+
+        $repository->getById(1);
     }
 }
