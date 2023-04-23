@@ -1,11 +1,11 @@
 <?php
 
-namespace Grimarina\CityBike\http\Actions\Stations;
+namespace Grimarina\CityBike\Actions\Stations;
 
 use Grimarina\CityBike\http\{ErrorResponse, Request, Response, SuccessfulResponse};
 use Grimarina\CityBike\Repositories\StationsRepository;
 use Grimarina\CityBike\Exceptions\{StationNotFoundException, HttpException};
-use Grimarina\CityBike\http\Actions\ActionInterface;
+use Grimarina\CityBike\Actions\ActionInterface;
 
 class FindById implements ActionInterface
 {

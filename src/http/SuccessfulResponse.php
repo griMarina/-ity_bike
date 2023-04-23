@@ -14,7 +14,7 @@ class SuccessfulResponse extends Response
     ) {
     }
 
-    protected function payload(): array
+    public function payload(): array
     {
         return ['data' => $this->data];
     }

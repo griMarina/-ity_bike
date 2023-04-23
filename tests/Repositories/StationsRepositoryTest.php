@@ -20,7 +20,7 @@ class StationsRepositoryTest extends TestCase
         $this->statementMock = $this->createMock(\PDOStatement::class);
         $this->stationRepository = new StationsRepository($this->connectionStub);
     }
-    public function testImportCsvInsertsCorrectData()
+    public function testImportCsvInsertsCorrectData(): void
     {
 
         // Create a temporary CSV file with correct data
@@ -67,7 +67,7 @@ class StationsRepositoryTest extends TestCase
         $this->stationRepository->importCsv($csv);
     }
 
-    public function testImportCsvThrowsExceptionWhenCsvContainsInvalidData()
+    public function testImportCsvThrowsExceptionWhenCsvContainsInvalidData(): void
     {
         // Create a CSV file with invalid data
         $csvData = [
@@ -94,7 +94,7 @@ class StationsRepositoryTest extends TestCase
         $this->stationRepository->importCsv($csv);
     }
 
-    public function testGetAllReturnsExpectedData()
+    public function testGetAllReturnsExpectedData(): void
     {
         $this->statementMock->expects($this->atLeastOnce())
             ->method('bindValue')
@@ -159,7 +159,7 @@ class StationsRepositoryTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testGetByIdReturnsStationObjectIfFound()
+    public function testGetByIdReturnsStationObjectIfFound(): void
     {
         // Define the return value of the mock PDOStatement's execute method
         $this->statementMock->expects($this->once())
@@ -199,7 +199,7 @@ class StationsRepositoryTest extends TestCase
         $this->assertInstanceOf(Station::class, $result);
     }
 
-    public function testGetByIdThrowsExceptionIfStationNotFound()
+    public function testGetByIdThrowsExceptionIfStationNotFound(): void
     {
         $this->statementMock->method('execute')->willReturn(null);
         $this->statementMock->method('fetchAll')->willReturn([]);

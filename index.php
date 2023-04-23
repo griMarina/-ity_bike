@@ -2,8 +2,8 @@
 
 use Grimarina\CityBike\http\{Request, ErrorResponse};
 use Grimarina\CityBike\Exceptions\HttpException;
-use Grimarina\CityBike\http\Actions\Stations\{ImportStations, FindAllStations, FindById};
-use Grimarina\CityBike\http\Actions\Trips\{ImportTrips};
+use Grimarina\CityBike\Actions\Stations\{ImportStations, FindAllStations, FindById};
+use Grimarina\CityBike\Actions\Trips\{ImportTrips};
 use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
 
 require_once __DIR__ . '/vendor/autoload.php';

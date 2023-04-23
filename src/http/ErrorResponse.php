@@ -14,7 +14,7 @@ class ErrorResponse extends Response
     ) {
     }
 
-    protected function payload(): array
+    public function payload(): array
     {
         return ['reason' => $this->reason];
     }

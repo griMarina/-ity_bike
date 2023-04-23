@@ -19,7 +19,7 @@ class TripsRepositoryTest extends TestCase
         $this->statementMock = $this->createMock(\PDOStatement::class);
         $this->tripsRepository = new TripsRepository($this->connectionStub);
     }
-    public function testImportCsvInsertsCorrectData()
+    public function testImportCsvInsertsCorrectData(): void
     {
         // Create a CSV file with correct data
         $csvData = [
@@ -62,7 +62,7 @@ class TripsRepositoryTest extends TestCase
         $this->tripsRepository->importCsv($csv);
     }
 
-    public function testImportCsvThrowsExceptionWhenCsvContainsInvalidData()
+    public function testImportCsvThrowsExceptionWhenCsvContainsInvalidData(): void
     {
         // Create a CSV file with invalid data
         $csvData = [
@@ -89,7 +89,7 @@ class TripsRepositoryTest extends TestCase
         $this->tripsRepository->importCsv($csv);
     }
 
-    public function testValidateCsv()
+    public function testValidateCsv(): void
     {
         // Create a CSV file with valid and invalid data
         $csvData = [

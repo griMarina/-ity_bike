@@ -1,6 +1,6 @@
 <?php
 
-namespace Grimarina\CityBike\http\Actions;
+namespace Grimarina\CityBike\Actions;
 
 use Grimarina\CityBike\http\{Request, Response};
 

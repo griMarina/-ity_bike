@@ -1,11 +1,11 @@
 <?php
 
-namespace Grimarina\CityBike\http\Actions\Stations;
+namespace Grimarina\CityBike\Actions\Stations;
 
 use Grimarina\CityBike\http\{ErrorResponse, Request, Response, SuccessfulResponse};
 use Grimarina\CityBike\Repositories\StationsRepository;
-use Grimarina\CityBike\Exceptions\NotFoundException;
-use Grimarina\CityBike\http\Actions\ActionInterface;
+use Grimarina\CityBike\Exceptions\StationNotFoundException;
+use Grimarina\CityBike\Actions\ActionInterface;
 
 class FindAllStations implements ActionInterface
 {
@@ -21,7 +21,7 @@ class FindAllStations implements ActionInterface
         try {
             $stations = $this->stationsRepository->getAll($page);
             return new SuccessfulResponse($stations);
-        } catch (NotFoundException $e) {
+        } catch (StationNotFoundException $e) {
             return new ErrorResponse($e->getMessage());
         }
     }

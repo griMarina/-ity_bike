@@ -22,5 +22,5 @@ abstract class Response
     }
 
     // Declaring an abstract method that returns a response payload
-    abstract protected function payload(): array;
+    abstract public function payload(): array;
 }
