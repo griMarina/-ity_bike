@@ -2,8 +2,8 @@
 
 namespace Grimarina\CityBike\Repositories;
 
-use Grimarina\CityBike\Entities\Station;
 use League\Csv\Reader;
+use Grimarina\CityBike\Entities\Station;
 use Grimarina\CityBike\Exceptions\{InvalidArgumentException, StationNotFoundException};
 
 class StationsRepository
@@ -15,7 +15,6 @@ class StationsRepository
 
     public function getAll(int $page): array
     {
-
         $limit = 20;
         $offset = ($page - 1) * $limit;
 

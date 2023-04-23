@@ -3,28 +3,28 @@
 namespace Actions;
 
 use PHPUnit\Framework\TestCase;
-use Grimarina\CityBike\Entities\Station;
-use Grimarina\CityBike\Repositories\StationsRepository;
+use Grimarina\CityBike\Entities\Trip;
+use Grimarina\CityBike\Repositories\TripsRepository;
 use Grimarina\CityBike\http\{Request, SuccessfulResponse, ErrorResponse};
-use Grimarina\CityBike\Actions\Stations\FindStationById;
-use Grimarina\CityBike\Exceptions\StationNotFoundException;
+use Grimarina\CityBike\Actions\Trips\FindTripById;
+use Grimarina\CityBike\Exceptions\TripNotFoundException;
 
-class FindStationByIdTest extends TestCase
+class FindTripByIdTest extends TestCase
 {
-    private $stationsRepository;
+    private $tripsRepository;
     private $mockRequest;
 
     protected function setUp(): void
     {
-        $this->stationsRepository = $this->createMock(StationsRepository::class);
+        $this->tripsRepository = $this->createMock(TripsRepository::class);
         $this->mockRequest = $this->createMock(Request::class);
     }
 
     public function testItReturnsSuccessfulResponse(): void
     {
-        $station = new Station(1, 'Test Station 1', '', '', 'Test Address 1', 'Test Address 1', '', '', '', 10, 60.123, 24.456, 100, 100);
+        $station = new Trip(1, '2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', 1000, 100);
 
-        $this->stationsRepository
+        $this->tripsRepository
             ->expects($this->once())
             ->method('getById')
             ->with(1)
@@ -36,31 +36,32 @@ class FindStationByIdTest extends TestCase
             ->with('id')
             ->willReturn('1');
 
-        $action = new FindStationById($this->stationsRepository);
+        $action = new FindTripById($this->tripsRepository);
         $response = $action->handle($this->mockRequest);
 
         $expectedRestult = [
             'id' => 1,
-            'name' => 'Test Station 1',
-            'address' => 'Test Address 1',
-            'capacity' => 10,
-            'x' => 60.123,
-            'y' => 24.456,
-            'start_trips' => 100,
-            'end_trips' => 100,
+            'departure' => '2021-05-01T00:00:11',
+            'return' => '2021-05-01T00:04:34',
+            'departure_station_id' => '1',
+            'departure_station_name' => 'Station A',
+            'return_station_id' => '2',
+            'return_station_name' => 'Station B',
+            'distance' => 1000,
+            'duration' => 100,
         ];
 
         $this->assertInstanceOf(SuccessfulResponse::class, $response);
         $this->assertEquals($expectedRestult, $response->payload()['data']);
     }
 
-    public function testItReturnsErrorResponseIfStationNotFound(): void
+    public function testItReturnsErrorResponseIfTripNotFound(): void
     {
-        $this->stationsRepository
+        $this->tripsRepository
             ->expects($this->once())
             ->method('getById')
             ->with(1)
-            ->willThrowException(new StationNotFoundException('Cannot find station: 1'));
+            ->willThrowException(new TripNotFoundException('Cannot find trip: 1'));
 
         $this->mockRequest
             ->expects($this->once())
@@ -68,10 +69,10 @@ class FindStationByIdTest extends TestCase
             ->with('id')
             ->willReturn('1');
 
-        $action = new FindStationById($this->stationsRepository);
+        $action = new FindTripById($this->tripsRepository);
         $response = $action->handle($this->mockRequest);
 
         $this->assertInstanceOf(ErrorResponse::class, $response);
-        $this->assertEquals('Cannot find station: 1', $response->payload()['reason']);
+        $this->assertEquals('Cannot find trip: 1', $response->payload()['reason']);
     }
 }

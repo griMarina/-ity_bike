@@ -1,16 +1,16 @@
 <?php
 
-namespace Grimarina\CityBike\Actions\Stations;
+namespace Grimarina\CityBike\Actions\Trips;
 
 use Grimarina\CityBike\http\{ErrorResponse, Request, Response, SuccessfulResponse};
-use Grimarina\CityBike\Repositories\StationsRepository;
-use Grimarina\CityBike\Exceptions\{StationNotFoundException, HttpException};
+use Grimarina\CityBike\Repositories\TripsRepository;
+use Grimarina\CityBike\Exceptions\{TripNotFoundException, HttpException};
 use Grimarina\CityBike\Actions\ActionInterface;
 
-class FindAllStations implements ActionInterface
+class FindAllTrips implements ActionInterface
 {
     public function __construct(
-        private StationsRepository $stationsRepository
+        private TripsRepository $tripsRepository
     ) {
     }
 
@@ -24,9 +24,9 @@ class FindAllStations implements ActionInterface
         }
 
         try {
-            $stations = $this->stationsRepository->getAll($page);
-            return new SuccessfulResponse($stations);
-        } catch (StationNotFoundException $e) {
+            $trips = $this->tripsRepository->getAll($page);
+            return new SuccessfulResponse($trips);
+        } catch (TripNotFoundException $e) {
             return new ErrorResponse($e->getMessage());
         }
     }

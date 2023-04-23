@@ -96,45 +96,6 @@ class StationsRepositoryTest extends TestCase
 
     public function testGetAllReturnsExpectedData(): void
     {
-        $this->statementMock->expects($this->atLeastOnce())
-            ->method('bindValue')
-            ->withConsecutive(
-                [$this->equalTo(':offset'), $this->equalTo(0), $this->equalTo(\PDO::PARAM_INT)],
-                [$this->equalTo(':limit'), $this->equalTo(20), $this->equalTo(\PDO::PARAM_INT)]
-            );
-        $this->statementMock->expects($this->once())
-            ->method('execute');
-
-        $this->statementMock
-            ->expects($this->once())
-            ->method('fetchAll')
-            ->with($this->equalTo(\PDO::FETCH_ASSOC))
-            ->willReturn([
-                [
-                    'id' => 1,
-                    'name_fi' => 'Station A',
-                    'address_fi' => 'Address A',
-                    'capacity' => 10,
-                    'coordinate_x' => 60.123456,
-                    'coordinate_y' => 24.123456,
-                ],
-                [
-                    'id' => 2,
-                    'name_fi' => 'Station B',
-                    'address_fi' => 'Address B',
-                    'capacity' => 20,
-                    'coordinate_x' => 60.654321,
-                    'coordinate_y' => 24.654321,
-                ],
-            ]);
-
-        $this->connectionStub
-            ->expects($this->once())
-            ->method('prepare')
-            ->with("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT :offset, :limit;")
-            ->willReturn($this->statementMock);
-
-        // Call the getAll method and assert that it returns the expected data
         $expected = [
             [
                 'id' => 1,
@@ -153,6 +114,28 @@ class StationsRepositoryTest extends TestCase
                 'coordinate_y' => 24.654321,
             ],
         ];
+
+        $this->statementMock->expects($this->atLeastOnce())
+            ->method('bindValue')
+            ->withConsecutive(
+                [$this->equalTo(':offset'), $this->equalTo(0), $this->equalTo(\PDO::PARAM_INT)],
+                [$this->equalTo(':limit'), $this->equalTo(20), $this->equalTo(\PDO::PARAM_INT)]
+            );
+
+        $this->statementMock->expects($this->once())
+            ->method('execute');
+
+        $this->statementMock
+            ->expects($this->once())
+            ->method('fetchAll')
+            ->with($this->equalTo(\PDO::FETCH_ASSOC))
+            ->willReturn($expected);
+
+        $this->connectionStub
+            ->expects($this->once())
+            ->method('prepare')
+            ->with("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT :offset, :limit;")
+            ->willReturn($this->statementMock);
 
         $result = $this->stationRepository->getAll(1);
 
@@ -206,11 +189,9 @@ class StationsRepositoryTest extends TestCase
 
         $this->connectionStub->method('prepare')->willReturn($this->statementMock);
 
-        $repository = new StationsRepository($this->connectionStub);
-
         $this->expectException(StationNotFoundException::class);
         $this->expectExceptionMessage('Cannot find station: 1');
 
-        $repository->getById(1);
+        $this->stationRepository->getById(1);
     }
 }

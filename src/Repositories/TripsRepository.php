@@ -5,13 +5,49 @@ namespace Grimarina\CityBike\Repositories;
 use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
-use Grimarina\CityBike\Exceptions\InvalidArgumentException;
+use Grimarina\CityBike\Entities\Trip;
+use Grimarina\CityBike\Exceptions\{InvalidArgumentException, TripNotFoundException};
 
 class TripsRepository
 {
     public function __construct(
         private \PDO $pdo
     ) {
+    }
+
+    public function getAll(int $page): array
+    {
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+
+        $stmt = $this->pdo->prepare("SELECT id, departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration FROM `trips` LIMIT :offset, :limit;");
+
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getById(int $id): ?Trip
+    {
+        $stmt = $this->pdo->prepare("SELECT id, departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration FROM `trips` WHERE trips.id = :id");
+
+        $stmt->execute(
+            [
+                ':id' => (int) $id
+            ]
+        );
+
+        $result = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Trip::class)[0] ?? null;
+
+        if ($result === null) {
+            $message = "Cannot find trip: $id";
+            throw new TripNotFoundException($message);
+        }
+
+        return $result;
     }
 
     public function importCsv(Reader $csv): void

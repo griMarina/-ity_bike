@@ -82,9 +82,9 @@ class Request
 
         $value = trim($this->get[$param]);
 
-        if (empty($value)) {
-            throw new HttpException("No such query param in the request: $param");
-        }
+        // if (empty($value)) {
+        //     throw new HttpException("No such query param in the request: $param");
+        // }
 
         return $value;
     }

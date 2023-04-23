@@ -2,8 +2,8 @@
 
 use Grimarina\CityBike\http\{Request, ErrorResponse};
 use Grimarina\CityBike\Exceptions\HttpException;
-use Grimarina\CityBike\Actions\Stations\{ImportStations, FindAllStations, FindById};
-use Grimarina\CityBike\Actions\Trips\{ImportTrips};
+use Grimarina\CityBike\Actions\Stations\{ImportStations, FindAllStations, FindStationById};
+use Grimarina\CityBike\Actions\Trips\{ImportTrips, FindAllTrips, FindTripById};
 use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -33,7 +33,9 @@ try {
 $routes = [
     'GET' => [
         '/stations/show' => new FindAllStations(new StationsRepository($pdo)),
-        '/station/show' => new FindById(new StationsRepository($pdo)),
+        '/station/show' => new FindStationById(new StationsRepository($pdo)),
+        '/trips/show' => new FindAllTrips(new TripsRepository($pdo)),
+        '/trip/show' => new FindTripById(new TripsRepository($pdo)),
 
     ],
     'POST' => [

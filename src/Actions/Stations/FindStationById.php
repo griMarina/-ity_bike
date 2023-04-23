@@ -7,7 +7,7 @@ use Grimarina\CityBike\Repositories\StationsRepository;
 use Grimarina\CityBike\Exceptions\{StationNotFoundException, HttpException};
 use Grimarina\CityBike\Actions\ActionInterface;
 
-class FindById implements ActionInterface
+class FindStationById implements ActionInterface
 {
     public function __construct(
         private StationsRepository $stationsRepository
