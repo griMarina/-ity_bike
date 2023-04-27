@@ -18,7 +18,7 @@ class StationsRepository
         // $limit = 20;
         $offset = ($page - 1) * $limit;
 
-        $stmt = $this->pdo->prepare("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` 
+        $stmt = $this->pdo->prepare("SELECT id, name_fi as `name`, address_fi as `address`, capacity, coordinate_x, coordinate_y FROM `stations` 
         ORDER BY id ASC LIMIT :offset, :limit ;");
 
         $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
