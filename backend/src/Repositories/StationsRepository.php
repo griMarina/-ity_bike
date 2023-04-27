@@ -13,12 +13,13 @@ class StationsRepository
     ) {
     }
 
-    public function getAll(int $page): array
+    public function getAll(int $page, int $limit): array
     {
-        $limit = 20;
+        // $limit = 20;
         $offset = ($page - 1) * $limit;
 
-        $stmt = $this->pdo->prepare("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT :offset, :limit;");
+        $stmt = $this->pdo->prepare("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` 
+        ORDER BY id ASC LIMIT :offset, :limit ;");
 
         $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
