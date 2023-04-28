@@ -13,6 +13,7 @@ export default {};
 <style scoped>
 .footer__wrapper {
   background-color: #072052;
+  margin-top: 40px;
 }
 
 .footer {

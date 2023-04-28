@@ -20,18 +20,20 @@
       :stations="searchedAndSortedStations"
       v-if="!isLoading"
     ></station-list>
-    <div v-else>Loading...</div>
+    <spinner v-else>Loading...</spinner>
   </div>
 </template>
 
 <script>
 import StationList from "@/components/StationList.vue";
 import Pagination from "@/components/Pagination.vue";
+import Spinner from "@/components/UI/Spinner.vue";
 import axios from "axios";
 export default {
   components: {
     StationList,
     Pagination,
+    Spinner
   },
   data() {
     return {
@@ -67,7 +69,6 @@ export default {
         this.totalPages = Math.ceil(response.data.data.entries / this.limit);
         this.stations = response.data.data.stations;
       } catch (error) {
-        ß;
         console.log(e);
       } finally {
         this.isLoading = false;
