@@ -27,7 +27,7 @@ export default {
 td,
 th {
   text-align: center;
-  padding: 8px;
+  padding: 4px;
   border-right: 1px solid #d7d6d6;
   font-size: 16px;
   color: #072052;
@@ -40,7 +40,7 @@ thead th {
 }
 
 tr {
-  height: 50px;
+  height: 30px;
 }
 
 tr:nth-child(even) {

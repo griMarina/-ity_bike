@@ -27,8 +27,11 @@ class FindAllStations implements ActionInterface
         }
 
         try {
+            $entries = $this->stationsRepository->getEntries();
             $stations = $this->stationsRepository->getAll($page, $limit);
-            return new SuccessfulResponse($stations);
+            $data['entries'] = $entries;
+            $data['stations'] = $stations;
+            return new SuccessfulResponse($data);
         } catch (StationNotFoundException $e) {
             return new ErrorResponse($e->getMessage());
         }

@@ -24,5 +24,7 @@ export default {
   cursor: pointer;
   background-color: white;
   color: #072052;
+  border-color:  #072052;
+
 }
 </style>

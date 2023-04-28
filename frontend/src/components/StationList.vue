@@ -45,14 +45,19 @@ export default {
 }
 th {
   text-align: center;
-  padding: 8px;
+  padding: 4px;
   border-right: 1px solid #787998;
   font-size: 14px;
+  width: 10%;
 }
 
 thead th {
   background: #072052;
   color: #ffffff;
-  text-transform: uppercase;
+  height: 40px;
+}
+
+th:nth-child(2), th:nth-child(3) {
+  width: 35%;
 }
 </style>

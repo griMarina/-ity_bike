@@ -13,9 +13,17 @@ class StationsRepository
     ) {
     }
 
+    public function getEntries(): int
+    {
+
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM `stations`;");
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_COLUMN);
+    }
+
     public function getAll(int $page, int $limit): array
     {
-        // $limit = 20;
         $offset = ($page - 1) * $limit;
 
         $stmt = $this->pdo->prepare("SELECT id, name_fi as `name`, address_fi as `address`, capacity, coordinate_x, coordinate_y FROM `stations` 

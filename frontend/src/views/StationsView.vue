@@ -10,42 +10,28 @@
       ></my-input>
       <my-select v-model="selectedSort" :options="sortOptions"></my-select>
     </div>
-    <div class="page__wrapper">
-      <div
-        v-for="pageNum in totalPages"
-        :key="pageNum"
-        class="page"
-        :class="{ 'current-page': page === pageNum }"
-        @click="changePage(pageNum)"
-      >
-        {{ pageNum }}
-      </div>
-    </div>
+    <pagination
+      :totalPages="totalPages"
+      :perPage="limit"
+      :currentPage="page"
+      @pagechanged="changePage"
+    ></pagination>
     <station-list
       :stations="searchedAndSortedStations"
       v-if="!isLoading"
     ></station-list>
     <div v-else>Loading...</div>
-    <div class="page__wrapper">
-      <div
-        v-for="pageNum in totalPages"
-        :key="pageNum"
-        class="page"
-        :class="{ 'current-page': page === pageNum }"
-        @click="changePage(pageNum)"
-      >
-        {{ pageNum }}
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import StationList from "@/components/StationList.vue";
+import Pagination from "@/components/Pagination.vue";
 import axios from "axios";
 export default {
   components: {
     StationList,
+    Pagination,
   },
   data() {
     return {
@@ -78,10 +64,8 @@ export default {
             },
           }
         );
-        // this.totalPages = Math.ceil(
-        //   response.headers["x-total-count"] / this.limit
-        // );
-        this.stations = response.data.data;
+        this.totalPages = Math.ceil(response.data.data.entries / this.limit);
+        this.stations = response.data.data.stations;
       } catch (error) {
         ß;
         console.log(e);
@@ -128,26 +112,5 @@ export default {
   display: flex;
   justify-content: space-between;
   margin: 15px 0;
-}
-
-.page__wrapper {
-  display: flex;
-  margin-top: 15px;
-}
-
-.page {
-  border: 1px solid #072052;
-  padding: 4px;
-  background-color: white;
-  color: #072052;
-  cursor: pointer;
-  width: 34px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.current-page {
-  background-color: #072052;
-  color: white;
 }
 </style>
