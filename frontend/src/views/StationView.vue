@@ -1,24 +1,7 @@
 <template>
   <div class="container">
-    <div  class="station" v-show="!isLoading">
-      <div class="station__info">
-        <h2 class="station__header">{{ station.name }}</h2>
-        <div>
-          Address: <span>{{ station.address }}</span>
-        </div>
-        <div>
-          Capacity: <span>{{ station.capacity }}</span>
-        </div>
-        <div>
-          Total number of journeys starting from the station:
-          <span>{{ station.start_trips }}</span>
-        </div>
-        <div>
-          Total number of journeys ending at the station:
-          <span>{{ station.end_trips }}</span>
-        </div>
-      </div>
-      <div class="station__location" id="map"></div>
+    <div class="station" v-show="!isLoading">
+      <station-info :station="station"></station-info>
     </div>
     <spinner v-show="isLoading"></spinner>
   </div>
@@ -27,10 +10,10 @@
 <script>
 import axios from "axios";
 import L from "leaflet";
-import Spinner from "../components/UI/Spinner.vue";
+import StationInfo from "../components/StationInfo.vue";
 export default {
   components: {
-    Spinner
+    StationInfo,
   },
   data() {
     return {
@@ -38,8 +21,6 @@ export default {
       isLoading: false,
       map: null,
       marker: null,
-      stationX: null,
-      stationY: null,
     };
   },
   methods: {
@@ -81,45 +62,11 @@ export default {
   justify-content: space-around;
   margin-top: 50px;
 }
-.station__info {
-  border: 2px solid #257bc9;
-  width: 450px;
-  height: 300px;
-  background-color: rgb(38 124 201 / 88%);
-  border-radius: 15px;
-  padding: 20px;
-  color: #ffffff;
-  font-size: 18px;
-  margin: 0 auto;
-}
 
-.station__header {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.station__info div {
-  margin-bottom: 10px;
-}
-
-.station__info span {
-  font-weight: 600;
-}
-.station__location {
-  width: 550px;
-  border: 2px solid #257bc9;
-  border-radius: 15px;
-  height: 450px;
-  margin: 0 auto;
-}
 @media (max-width: 1222px) {
   .station {
     flex-direction: column;
     justify-content: center;
-  }
-
-  .station__info {
-    margin-bottom: 40px;
   }
 }
 </style>

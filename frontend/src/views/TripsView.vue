@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <h2 class="header">Stations</h2>
+    <h2 class="header">Trips</h2>
     <div class="app__btns">
       <my-input
         class="search"
         v-focus
         v-model="searchQuery"
-        placeholder="Search station by name"
+        placeholder="Search trip ..."
       ></my-input>
       <my-select v-model="selectedSort" :options="sortOptions"></my-select>
     </div>
@@ -16,26 +16,23 @@
       :currentPage="page"
       @pagechanged="changePage"
     ></pagination>
-    <station-table
-      :stations="searchedAndSortedStations"
-      v-if="!isLoading"
-    ></station-table>
+    <trip-table :trips="searchedAndSortedTrips" v-if="!isLoading"></trip-table>
     <spinner v-else>Loading...</spinner>
   </div>
 </template>
 
 <script>
-import StationTable from "@/components/StationTable.vue";
+import TripTable from "@/components/TripTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import axios from "axios";
 export default {
   components: {
-    StationTable,
+    TripTable,
     Pagination,
   },
   data() {
     return {
-      stations: [],
+      trips: [],
       isLoading: false,
       selectedSort: "",
       searchQuery: "",
@@ -43,8 +40,8 @@ export default {
       limit: 30,
       totalPages: 10,
       sortOptions: [
-        { value: "name", name: "name" },
-        { value: "address", name: "address" },
+        { value: "departure", name: "departure station" },
+        { value: "return", name: "return station" },
       ],
     };
   },
@@ -52,20 +49,17 @@ export default {
     changePage(pageNum) {
       this.page = pageNum;
     },
-    async fetchStations() {
+    async fetchTrips() {
       try {
         this.isLoading = true;
-        const response = await axios.get(
-          "http://localhost:8888/stations/show",
-          {
-            params: {
-              page: this.page,
-              limit: this.limit,
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:8888/trips/show", {
+          params: {
+            page: this.page,
+            limit: this.limit,
+          },
+        });
         this.totalPages = Math.ceil(response.data.data.entries / this.limit);
-        this.stations = response.data.data.stations;
+        this.trips = response.data.data.trips;
       } catch (error) {
         console.log(error);
       } finally {
@@ -74,23 +68,23 @@ export default {
     },
   },
   mounted() {
-    this.fetchStations();
+    this.fetchTrips();
   },
   computed: {
-    sortedStations() {
-      return [...this.stations].sort((st1, st2) =>
-        st1[this.selectedSort]?.localeCompare(st2[this.selectedSort])
+    sortedTrips() {
+      return [...this.trips].sort((trip1, trip2) =>
+        trip1[this.selectedSort]?.localeCompare(trip2[this.selectedSort])
       );
     },
-    searchedAndSortedStations() {
-      return this.sortedStations.filter((st) =>
-        st.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+    searchedAndSortedTrips() {
+      return this.sortedTrips.filter((trip) =>
+        trip.departure.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
   },
   watch: {
     page() {
-      this.fetchStations();
+      this.fetchTrips();
     },
   },
 };

@@ -1,31 +1,26 @@
 <template>
-  <table class="table" v-if="stations.length > 0">
+  <table class="table" v-if="trips.length > 0">
     <thead>
       <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Address</th>
-        <th>Capacity</th>
-        <th></th>
+        <th>Departure station</th>
+        <th>Return station</th>
+        <th>Distance (km)</th>
+        <th>Duration (m)</th>
       </tr>
     </thead>
-    <station-item
-      v-for="station in stations"
-      :station="station"
-      :key="station.id"
-    ></station-item>
+    <trip-row v-for="trip in trips" :trip="trip" :key="trip.id"></trip-row>
   </table>
   <h2 v-else>List is empty</h2>
 </template>
 
 <script>
-import StationItem from "@/components/StationItem.vue";
+import TripRow from "@/components/TripRow.vue";
 export default {
   components: {
-    StationItem,
+    TripRow,
   },
   props: {
-    stations: {
+    trips: {
       type: Array,
       required: true,
     },
@@ -57,7 +52,8 @@ thead th {
   height: 40px;
 }
 
-th:nth-child(2), th:nth-child(3) {
+th:first-child,
+th:nth-child(2) {
   width: 35%;
 }
 </style>

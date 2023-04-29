@@ -68,7 +68,7 @@ class FindAllStationsTest extends TestCase
             ->with(1)
             ->willThrowException(new StationNotFoundException('Stations not found.'));
 
-         $this->mockRequest
+        $this->mockRequest
             ->expects($this->exactly(2))
             ->method('query')
             ->willReturnMap([

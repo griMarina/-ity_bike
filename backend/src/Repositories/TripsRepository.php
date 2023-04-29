@@ -15,9 +15,17 @@ class TripsRepository
     ) {
     }
 
-    public function getAll(int $page): array
+    public function getEntries(): int
     {
-        $limit = 20;
+
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM `trips`;");
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_COLUMN);
+    }
+
+    public function getAll(int $page, int $limit): array
+    {
         $offset = ($page - 1) * $limit;
 
         $stmt = $this->pdo->prepare("SELECT id, departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration FROM `trips` LIMIT :offset, :limit;");
@@ -27,7 +35,12 @@ class TripsRepository
 
         $stmt->execute();
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($result as &$row) {
+            $row['distance'] = round(($row['distance'] / 1000), 2);
+            $row['duration'] = $row['duration'] / 60;
+        }
+        return $result;
     }
 
     public function getById(int $id): ?Trip
@@ -107,7 +120,7 @@ class TripsRepository
                 } catch (InvalidArgumentException $e) {
                     return false; // skip row if departure or return isn't parseable
                 }
-    
+
                 return ($row['Duration (sec.)'] >= 10) && ($row['Covered distance (m)'] >= 10);
             });
 
