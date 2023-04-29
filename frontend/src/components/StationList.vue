@@ -52,7 +52,7 @@ th {
 }
 
 thead th {
-  background: #072052;
+  background: #257bc9;
   color: #ffffff;
   height: 40px;
 }

@@ -10,6 +10,6 @@ export default {};
 h1 {
   text-align: center;
   margin-top: 20px;
-  color: #072052;
+  color: #257bc9;
 }
 </style>

@@ -28,9 +28,11 @@ export default {
 </script>
 
 <style scoped>
-.select{
+.select {
   min-width: 30%;
   margin-top: 10px;
   padding: 10px 15px;
-  border: 2px solid #072052;}
+  border: 2px solid #257bc9;
+  border-radius: 5px;
+}
 </style>

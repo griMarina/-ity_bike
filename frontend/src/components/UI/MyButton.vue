@@ -14,17 +14,18 @@ export default {
 .btn {
   padding: 10px 15px;
   border: 1px solid white;
-  background: #072052;
+  background: #257bc9;
   transition-duration: 0.3s;
   text-align: center;
   color: white;
+  border-radius: 5px;
 }
 
 .btn:hover {
   cursor: pointer;
   background-color: white;
-  color: #072052;
-  border-color:  #072052;
+  color: #257bc9;
+  border-color:  #257bc9;
 
 }
 </style>

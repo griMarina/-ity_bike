@@ -20,7 +20,7 @@ export default {};
 
 <style scoped>
 .navbar__wrapper {
-  background-color: #072052;
+  background-color: #257bc9;
 }
 
 .navbar {

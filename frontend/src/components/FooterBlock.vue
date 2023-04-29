@@ -12,7 +12,7 @@ export default {};
 
 <style scoped>
 .footer__wrapper {
-  background-color: #072052;
+  background-color: #257bc9;
   margin-top: 40px;
 }
 

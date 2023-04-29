@@ -7,7 +7,7 @@
         @click="onClickFirstPage"
         :disabled="isInFirstPage"
       >
-        First
+        &laquo;
       </button>
     </li>
     <li>
@@ -46,7 +46,7 @@
         @click="onClickLastPage"
         :disabled="isInLastPage"
       >
-        Last
+        &raquo;
       </button>
     </li>
   </ul>
@@ -143,18 +143,25 @@ export default {
 }
 
 .pagination__btn {
-  border: 1px solid #072052;
+  border: 1px solid #58595a;
   padding: 4px;
   background-color: white;
-  color: #072052;
+  color: #47494d;
   cursor: pointer;
-  min-width: 34px;
+  min-width: 36px;
   text-align: center;
   margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.pagination__btn:hover {
+  cursor: pointer;
+  background-color: #257bc9;
+  color: white;
 }
 
 .active {
-  background-color: #072052;
+  background-color: #257bc9;
   color: white;
 }
 </style>

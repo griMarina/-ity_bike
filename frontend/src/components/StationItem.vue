@@ -33,17 +33,11 @@ th {
   color: #072052;
 }
 
-thead th {
-  background: #745a5a;
-  color: #ffffff;
-  text-transform: uppercase;
-}
-
 tr {
   height: 30px;
 }
 
 tr:nth-child(even) {
-  background: #c3c9d7;
+  background: #b2cfeb;
 }
 </style>

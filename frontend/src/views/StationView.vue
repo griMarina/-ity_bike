@@ -1,6 +1,6 @@
 <template>
-  <div class="station container">
-    <div v-show="!isLoading">
+  <div class="container">
+    <div  class="station" v-show="!isLoading">
       <div class="station__info">
         <h2 class="station__header">{{ station.name }}</h2>
         <div>
@@ -82,13 +82,13 @@ export default {
   margin-top: 50px;
 }
 .station__info {
-  border: 2px solid #072052;
+  border: 2px solid #257bc9;
   width: 450px;
   height: 300px;
-  background-color: rgba(255, 255, 255, 0.71);
+  background-color: rgb(38 124 201 / 88%);
   border-radius: 15px;
   padding: 20px;
-  color: #072052;
+  color: #ffffff;
   font-size: 18px;
   margin: 0 auto;
 }
@@ -107,7 +107,7 @@ export default {
 }
 .station__location {
   width: 550px;
-  border: 2px solid #072052;
+  border: 2px solid #257bc9;
   border-radius: 15px;
   height: 450px;
   margin: 0 auto;
