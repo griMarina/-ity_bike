@@ -119,7 +119,7 @@ class StationsRepositoryTest extends TestCase
             ->method('bindValue')
             ->withConsecutive(
                 [$this->equalTo(':offset'), $this->equalTo(0), $this->equalTo(\PDO::PARAM_INT)],
-                [$this->equalTo(':limit'), $this->equalTo(20), $this->equalTo(\PDO::PARAM_INT)]
+                [$this->equalTo(':limit'), $this->equalTo(10), $this->equalTo(\PDO::PARAM_INT)]
             );
 
         $this->statementMock->expects($this->once())
@@ -134,10 +134,13 @@ class StationsRepositoryTest extends TestCase
         $this->connectionStub
             ->expects($this->once())
             ->method('prepare')
-            ->with("SELECT id, name_fi, address_fi, capacity, coordinate_x, coordinate_y FROM `stations` LIMIT :offset, :limit;")
+            ->with("SELECT id, name_fi as `name`, address_fi as `address`, capacity, coordinate_x, coordinate_y FROM `stations` 
+        ORDER BY id ASC LIMIT :offset, :limit ;")
             ->willReturn($this->statementMock);
 
-        $result = $this->stationRepository->getAll(1);
+        $page = 1;
+        $limit = 10;
+        $result = $this->stationRepository->getAll($page, $limit);
 
         $this->assertEquals($expected, $result);
     }

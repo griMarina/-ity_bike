@@ -28,36 +28,53 @@ class FindAllStationsTest extends TestCase
 
         $this->stationsRepository
             ->expects($this->once())
+            ->method('getEntries')
+            ->willReturn(2);
+
+        $this->stationsRepository
+            ->expects($this->once())
             ->method('getAll')
-            ->with(1)
+            ->with(1, 10)
             ->willReturn($stations);
 
         $this->mockRequest
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('query')
-            ->with('page')
-            ->willReturn('1');
+            ->willReturnMap([
+                ['page', '1'],
+                ['limit', '10'],
+            ]);
 
         $action = new FindAllStations($this->stationsRepository);
         $response = $action->handle($this->mockRequest);
 
         $this->assertInstanceOf(SuccessfulResponse::class, $response);
-        $this->assertEquals($stations, $response->payload()['data']);
+        $this->assertEquals($stations, $response->payload()['data']['stations']);
+        $this->assertEquals(2, $response->payload()['data']['entries']);
+        $this->assertIsFloat($response->payload()['data']['stations'][0]['coordinate_x']);
+        $this->assertIsFloat($response->payload()['data']['stations'][0]['coordinate_y']);
     }
 
     public function testItReturnsErrorResponseIfStationsNotFound(): void
     {
         $this->stationsRepository
             ->expects($this->once())
+            ->method('getEntries')
+            ->willReturn(2);
+
+        $this->stationsRepository
+            ->expects($this->once())
             ->method('getAll')
             ->with(1)
             ->willThrowException(new StationNotFoundException('Stations not found.'));
 
-        $this->mockRequest
-            ->expects($this->once())
+         $this->mockRequest
+            ->expects($this->exactly(2))
             ->method('query')
-            ->with('page')
-            ->willReturn('1');
+            ->willReturnMap([
+                ['page', '1'],
+                ['limit', '10'],
+            ]);
 
         $action = new FindAllStations($this->stationsRepository);
         $response = $action->handle($this->mockRequest);

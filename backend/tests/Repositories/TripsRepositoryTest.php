@@ -131,7 +131,7 @@ class TripsRepositoryTest extends TestCase
 
         $this->assertEquals($expectedResult, $resultSet->fetchOne());
     }
-
+    
     public function testGetAllReturnsExpectedData(): void
     {
         $expected = [

@@ -6,7 +6,7 @@ namespace Grimarina\CityBike\Actions\Stations;
 
 use Grimarina\CityBike\http\{ErrorResponse, Request, Response, SuccessfulResponse};
 use Grimarina\CityBike\Repositories\StationsRepository;
-use Grimarina\CityBike\Exceptions\ImportException;
+use Grimarina\CityBike\Exceptions\{ImportException, InvalidArgumentException};
 use Grimarina\CityBike\Actions\ActionInterface;
 use League\Csv\Reader;
 
@@ -17,6 +17,9 @@ class ImportStations implements ActionInterface
         private string $filename,
         private StationsRepository $stationsRepository
     ) {
+        if (pathinfo($filename, PATHINFO_EXTENSION) !== 'csv') {
+            throw new InvalidArgumentException('Invalid file extension. Only CSV files are allowed.');
+        }
     }
 
     public function handle(Request $request): Response

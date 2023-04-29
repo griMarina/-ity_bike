@@ -63,8 +63,8 @@ class TripsRepository
 
         foreach ($validCsv as $row) {
             $batch[] = [
-                ':departure' => (string) $row['Departure'],
-                ':return' => (string) $row['Return'],
+                ':departure' => $row['Departure'],
+                ':return' => $row['Return'],
                 ':departure_station_id' => (string) $row['Departure station id'],
                 ':departure_station_name' => (string) $row['Departure station name'],
                 ':return_station_id' => (string) $row['Return station id'],
@@ -100,8 +100,17 @@ class TripsRepository
                 if (!isset($row['Duration (sec.)']) || !isset($row['Covered distance (m)'])) {
                     throw new InvalidArgumentException('File contains invalid data');
                 }
+
+                try {
+                    new \DateTime($row['Departure']);
+                    new \DateTime($row['Return']);
+                } catch (InvalidArgumentException $e) {
+                    return false; // skip row if departure or return isn't parseable
+                }
+    
                 return ($row['Duration (sec.)'] >= 10) && ($row['Covered distance (m)'] >= 10);
             });
+
 
         $validCsv = $statement->process($csv);
         return $validCsv;

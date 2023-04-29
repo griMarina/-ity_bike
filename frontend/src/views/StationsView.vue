@@ -69,7 +69,7 @@ export default {
         this.totalPages = Math.ceil(response.data.data.entries / this.limit);
         this.stations = response.data.data.stations;
       } catch (error) {
-        console.log(e);
+        console.log(error);
       } finally {
         this.isLoading = false;
       }
