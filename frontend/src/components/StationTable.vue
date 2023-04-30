@@ -6,7 +6,6 @@
         <th>Name</th>
         <th>Address</th>
         <th>Capacity</th>
-        <th></th>
       </tr>
     </thead>
     <station-row
@@ -15,7 +14,7 @@
       :key="station.id"
     ></station-row>
   </table>
-  <h2 v-else>List is empty</h2>
+  <no-results v-else></no-results>
 </template>
 
 <script>
@@ -55,6 +54,7 @@ thead th {
   background: #257bc9;
   color: #ffffff;
   height: 40px;
+  font-size: 16px;
 }
 
 th:nth-child(2),

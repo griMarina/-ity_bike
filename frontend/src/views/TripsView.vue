@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2 class="header">Trips</h2>
+    <h1 class="header"><span>City Bike Trips</span></h1>
     <div class="app__btns">
       <my-input
         class="search"
@@ -40,8 +40,10 @@ export default {
       limit: 30,
       totalPages: 10,
       sortOptions: [
-        { value: "departure", name: "departure station" },
-        { value: "return", name: "return station" },
+        { value: "departure_station_name", name: "departure station" },
+        { value: "return_station_name", name: "return station" },
+        { value: "distance", name: "distance" },
+        { value: "duration", name: "duration" },
       ],
     };
   },
@@ -72,14 +74,29 @@ export default {
   },
   computed: {
     sortedTrips() {
-      return [...this.trips].sort((trip1, trip2) =>
-        trip1[this.selectedSort]?.localeCompare(trip2[this.selectedSort])
-      );
+      return [...this.trips].sort((trip1, trip2) => {
+        if (
+          this.selectedSort === "duration" ||
+          this.selectedSort === "distance"
+        ) {
+          return trip1[this.selectedSort] - trip2[this.selectedSort];
+        }
+        return trip1[this.selectedSort]?.localeCompare(
+          trip2[this.selectedSort]
+        );
+      });
     },
     searchedAndSortedTrips() {
-      return this.sortedTrips.filter((trip) =>
-        trip.departure.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+      return this.sortedTrips.filter((trip) => {
+        return (
+          trip.departure_station_name
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          trip.return_station_name
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())
+        );
+      });
     },
   },
   watch: {
@@ -91,13 +108,6 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  text-align: center;
-  color: #257bc9;
-  font-size: 26px;
-  margin-top: 20px;
-}
-
 .search {
   width: 30%;
 }

@@ -1,13 +1,13 @@
 <template>
   <tr>
     <td
-      class="station-name"
+      class="station__name"
       @click="$router.push(`/stations/${trip.departure_station_id}`)"
     >
       {{ trip.departure_station_name }}
     </td>
     <td
-      class="station-name"
+      class="station__name"
       @click="$router.push(`/stations/${trip.return_station_id}`)"
     >
       {{ trip.return_station_name }}
@@ -50,9 +50,9 @@ th {
   color: #072052;
 }
 
-.station-name:hover {
+.station__name:hover {
+  color: #257bc9;
   cursor: pointer;
-  text-decoration: underline;
 }
 
 tr {

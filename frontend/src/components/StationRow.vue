@@ -1,14 +1,11 @@
 <template>
   <tr>
     <td>{{ station.id }}</td>
-    <td>{{ station.name }}</td>
+    <td class="station__name" @click="$router.push(`/stations/${station.id}`)">
+      {{ station.name }}
+    </td>
     <td>{{ station.address }}</td>
     <td>{{ station.capacity }}</td>
-    <td >
-      <my-button @click="$router.push(`/stations/${station.id}`)"
-        >View</my-button
-      >
-    </td>
   </tr>
 </template>
 
@@ -39,5 +36,10 @@ tr {
 
 tr:nth-child(even) {
   background: #b2cfeb;
+}
+
+.station__name:hover {
+  color: #257bc9;
+  cursor: pointer;
 }
 </style>

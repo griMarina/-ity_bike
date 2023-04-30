@@ -1,11 +1,11 @@
 <template>
-    <div class="app">
-      <navbar></navbar>
-      <div class="content">
-        <router-view></router-view>
-      </div>
-      <footer-block></footer-block>
+  <div class="app">
+    <navbar></navbar>
+    <div class="content">
+      <router-view></router-view>
     </div>
+    <footer-block></footer-block>
+  </div>
 </template>
 
 <script>
@@ -26,9 +26,9 @@ export default {
 .app {
   background: linear-gradient(rgb(255 255 255 / 60%), rgb(255 255 255 / 60%)),
     url("/bg.png"), repeat;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .content {
@@ -41,6 +41,13 @@ export default {
   padding: 0 20px;
 }
 
+.header {
+  text-align: center;
+  margin-top: 20px;
+}
 
-
+.header span {
+  color: #257bc9;
+  background-color: #f9faf8;
+}
 </style>

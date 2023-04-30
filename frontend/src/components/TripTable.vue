@@ -10,7 +10,7 @@
     </thead>
     <trip-row v-for="trip in trips" :trip="trip" :key="trip.id"></trip-row>
   </table>
-  <h2 v-else>List is empty</h2>
+  <no-results v-else></no-results>
 </template>
 
 <script>
@@ -50,6 +50,7 @@ thead th {
   background: #257bc9;
   color: #ffffff;
   height: 40px;
+  font-size: 16px;
 }
 
 th:first-child,

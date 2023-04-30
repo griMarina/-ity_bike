@@ -21,11 +21,11 @@ export default {
   border-radius: 5px;
 }
 
-.btn:hover {
+.btn:hover,
+.active {
   cursor: pointer;
   background-color: white;
   color: #257bc9;
-  border-color:  #257bc9;
-
+  border-color: #257bc9;
 }
 </style>

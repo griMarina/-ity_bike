@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <h2 class="header">Stations</h2>
+    <h1 class="header"><span>City Bike Stations</span></h1>
     <div class="app__btns">
       <my-input
         class="search"
         v-focus
         v-model="searchQuery"
-        placeholder="Search station by name"
+        placeholder="Search station by name or address"
       ></my-input>
       <my-select v-model="selectedSort" :options="sortOptions"></my-select>
     </div>
@@ -43,8 +43,10 @@ export default {
       limit: 30,
       totalPages: 10,
       sortOptions: [
+        { value: "id", name: "id" },
         { value: "name", name: "name" },
         { value: "address", name: "address" },
+        { value: "capacity", name: "capacity" },
       ],
     };
   },
@@ -78,14 +80,20 @@ export default {
   },
   computed: {
     sortedStations() {
-      return [...this.stations].sort((st1, st2) =>
-        st1[this.selectedSort]?.localeCompare(st2[this.selectedSort])
-      );
+      return [...this.stations].sort((st1, st2) => {
+        if (this.selectedSort === "id" || this.selectedSort === "capacity") {
+          return st1[this.selectedSort] - st2[this.selectedSort];
+        }
+        return st1[this.selectedSort]?.localeCompare(st2[this.selectedSort]);
+      });
     },
     searchedAndSortedStations() {
-      return this.sortedStations.filter((st) =>
-        st.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+      return this.sortedStations.filter((st) => {
+        return (
+          st.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          st.address.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      });
     },
   },
   watch: {
@@ -97,13 +105,6 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  text-align: center;
-  color: #257bc9;
-  font-size: 26px;
-  margin-top: 20px;
-}
-
 .search {
   width: 30%;
 }

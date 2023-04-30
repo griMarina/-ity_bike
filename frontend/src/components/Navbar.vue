@@ -1,12 +1,23 @@
 <template>
   <div class="navbar__wrapper">
     <div class="navbar container">
-      <div @click="$router.push('/')">Home</div>
+      <my-button
+        class="navbar__btn"
+        @click="$router.push('/')"
+        :class="{ active: isRouteActive('/') }"
+        >Home</my-button
+      >
       <div class="navbar__btns">
-        <my-button class="navbar__btn" @click="$router.push('/stations')"
+        <my-button
+          class="navbar__btn"
+          @click="$router.push('/stations')"
+          :class="{ active: isRouteActive('/stations') }"
           >Stations</my-button
         >
-        <my-button class="navbar__btn" @click="$router.push('/trips')"
+        <my-button
+          class="navbar__btn"
+          @click="$router.push('/trips')"
+          :class="{ active: isRouteActive('/trips') }"
           >Trips</my-button
         >
       </div>
@@ -15,7 +26,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    currentRoute() {
+      return this.$route.path;
+    },
+  },
+  methods: {
+    isRouteActive(path) {
+      return this.currentRoute === path;
+    },
+  },
+};
 </script>
 
 <style scoped>
