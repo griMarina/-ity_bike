@@ -22,7 +22,7 @@ class FindStationByIdTest extends TestCase
 
     public function testItReturnsSuccessfulResponse(): void
     {
-        $station = new Station(1, 'Test Station 1', '', '', 'Test Address 1', 'Test Address 1', '', '', '', 10, 60.123, 24.456, 100, 100);
+        $station = new Station(1, 'Test Station 1', '', '', 'Test Address 1', 'Test Address 1', '', '', '', 10, 60.123, 24.456);
 
         $this->stationsRepository
             ->expects($this->once())
@@ -45,9 +45,7 @@ class FindStationByIdTest extends TestCase
             'address' => 'Test Address 1',
             'capacity' => 10,
             'x' => 60.123,
-            'y' => 24.456,
-            'start_trips' => 100,
-            'end_trips' => 100,
+            'y' => 24.456
         ];
 
         $this->assertInstanceOf(SuccessfulResponse::class, $response);

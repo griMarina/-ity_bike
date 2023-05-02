@@ -39,17 +39,7 @@ class StationsRepository
 
     public function getById(int $id): ?Station
     {
-        $stmt = $this->pdo->prepare("SELECT stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y,
-        (
-            SELECT COUNT(DISTINCT id) 
-            FROM trips
-            WHERE departure_station_id = stations.id
-        ) AS start_trips,
-        (
-            SELECT COUNT(DISTINCT id) 
-            FROM trips
-            WHERE return_station_id = stations.id
-        ) AS end_trips
+        $stmt = $this->pdo->prepare("SELECT stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y
         FROM stations
         WHERE stations.id = :id
         GROUP BY stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y;");
@@ -66,6 +56,42 @@ class StationsRepository
             $message = "Cannot find station: $id";
             throw new StationNotFoundException($message);
         }
+
+        return $result;
+    }
+
+    public function getAddInfoById(int $id): array
+    {
+        // Get total number of journeys and the average distance of a journey starting from the station
+        $stmt = $this->pdo->prepare("SELECT COUNT(DISTINCT id) AS total_start, AVG(distance) as avg_distance_start FROM trips WHERE departure_station_id = :id");
+        $stmt->execute([':id' => $id]);
+        $tripsStart = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $tripsStart['avg_distance_start'] = round(($tripsStart['avg_distance_start'] / 1000), 2);
+
+        // Get total number of journeys and the average distance of a journey ending at the station
+        $stmt = $this->pdo->prepare("SELECT COUNT(DISTINCT id) AS total_end, AVG(distance) as avg_distance_end FROM trips WHERE return_station_id = :id");
+        $stmt->execute([':id' => $id]);
+        $tripsEnd = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $tripsEnd['avg_distance_end'] = round(($tripsEnd['avg_distance_end'] / 1000), 2);
+
+        // Get the top 5 most popular return stations for journeys starting from the station
+        $stmt = $this->pdo->prepare("SELECT return_station_id, return_station_name FROM trips WHERE departure_station_id = :id GROUP BY return_station_id, return_station_name ORDER BY COUNT(*)  DESC LIMIT 5");
+        $stmt->execute([':id' => $id]);
+        $topReturnStations = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Get the top 5 most popular departure stations for journeys ending at the station
+        $stmt = $this->pdo->prepare("SELECT departure_station_id,departure_station_name FROM trips WHERE return_station_id = :id GROUP BY departure_station_id, departure_station_name ORDER BY COUNT(*)  DESC LIMIT 5");
+        $stmt->execute([':id' => $id]);
+        $topDepartureStations = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $result = [
+            'total_start' => (int) $tripsStart['total_start'],
+            'total_end' => (int) $tripsEnd['total_end'],
+            'avg_distance_start' => (float) $tripsStart['avg_distance_start'],
+            'avg_distance_end' => (float) $tripsEnd['avg_distance_end'],
+            'top_return_stations' => (array) $topReturnStations,
+            'top_departure_stations' => (array) $topDepartureStations,
+        ];
 
         return $result;
     }

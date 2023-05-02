@@ -4,7 +4,6 @@ namespace Grimarina\CityBike\Entities;
 
 class Station
 {
-
     public function __construct(
         private int $id = 0,
         private string $name_fi = '',
@@ -18,8 +17,6 @@ class Station
         private int $capacity = 0,
         private float $coordinate_x = 0.0,
         private float $coordinate_y = 0.0,
-        private int $start_trips = 0,
-        private int $end_trips = 0,
     ) {
     }
 
@@ -51,16 +48,6 @@ class Station
     public function getCoordinateY(): float
     {
         return $this->coordinate_y;
-    }
-
-    public function getStartTrips(): int
-    {
-        return $this->start_trips;
-    }
-
-    public function getEndTrips(): int
-    {
-        return $this->end_trips;
     }
 
     public function __toString(): string

@@ -131,7 +131,7 @@ class TripsRepositoryTest extends TestCase
 
         $this->assertEquals($expectedResult, $resultSet->fetchOne());
     }
-    
+
     public function testGetAllReturnsExpectedData(): void
     {
         $expected = [
@@ -181,8 +181,12 @@ class TripsRepositoryTest extends TestCase
             ->with("SELECT id, departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration FROM `trips` LIMIT :offset, :limit;")
             ->willReturn($this->statementMock);
 
-
-        $result = $this->tripsRepository->getAll(1);
+        foreach ($expected as &$row) {
+            $row['distance'] = round(($row['distance'] / 1000), 2);
+            $row['duration'] = $row['duration'] / 60;
+        }
+        
+        $result = $this->tripsRepository->getAll(1, 20);
 
         $this->assertEquals($expected, $result);
     }

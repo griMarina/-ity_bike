@@ -78,9 +78,9 @@ class TripsRepository
             $batch[] = [
                 ':departure' => $row['Departure'],
                 ':return' => $row['Return'],
-                ':departure_station_id' => (string) $row['Departure station id'],
+                ':departure_station_id' => (int) $row['Departure station id'],
                 ':departure_station_name' => (string) $row['Departure station name'],
-                ':return_station_id' => (string) $row['Return station id'],
+                ':return_station_id' => (int) $row['Return station id'],
                 ':return_station_name' => (string) $row['Return station name'],
                 ':distance' => (int) $row['Covered distance (m)'],
                 ':duration' => (int) $row['Duration (sec.)']

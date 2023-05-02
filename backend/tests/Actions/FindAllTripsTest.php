@@ -28,36 +28,54 @@ class FindAllTripsTest extends TestCase
 
         $this->tripsRepository
             ->expects($this->once())
+            ->method('getEntries')
+            ->willReturn(2);
+
+        $this->tripsRepository
+            ->expects($this->once())
             ->method('getAll')
-            ->with(1)
+            ->with(1, 10)
             ->willReturn($trips);
 
         $this->mockRequest
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('query')
-            ->with('page')
-            ->willReturn('1');
+            ->willReturnMap([
+                ['page', '1'],
+                ['limit', '10'],
+            ]);
 
         $action = new FindAllTrips($this->tripsRepository);
         $response = $action->handle($this->mockRequest);
 
         $this->assertInstanceOf(SuccessfulResponse::class, $response);
-        $this->assertEquals($trips, $response->payload()['data']);
+        $this->assertEquals($trips, $response->payload()['data']['trips']);
+        $this->assertEquals(2, $response->payload()['data']['entries']);
     }
 
     public function testItReturnsErrorResponseIfTripsNotFound(): void
     {
+        $this->mockRequest
+            ->expects($this->exactly(2))
+            ->method('query')
+            ->willReturnMap([
+                ['page', '1'],
+                ['limit', '10'],
+            ]);
+            
         $this->tripsRepository
             ->expects($this->once())
             ->method('getAll')
-            ->with(1)
+            ->with(1, 10)
             ->willThrowException(new TripNotFoundException('Trips not found.'));
 
         $this->mockRequest
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('query')
-            ->with('page')
-            ->willReturn('1');
+            ->willReturnMap([
+                ['page', '1'],
+                ['limit', '10'],
+            ]);
 
         $action = new FindAllTrips($this->tripsRepository);
         $response = $action->handle($this->mockRequest);

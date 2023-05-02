@@ -25,6 +25,7 @@ class FindStationById implements ActionInterface
 
         try {
             $station = $this->stationsRepository->getById($id);
+            $addInfo = $this->stationsRepository->getAddInfoById($id);
         } catch (StationNotFoundException $error) {
             return new ErrorResponse($error->getMessage());
         }
@@ -36,8 +37,12 @@ class FindStationById implements ActionInterface
             'capacity' => $station->getCapacity(),
             'x' => $station->getCoordinateX(),
             'y' => $station->getCoordinateY(),
-            'start_trips' => $station->getStartTrips(),
-            'end_trips' => $station->getEndTrips(),
+            'total_start' => $addInfo['total_start'],
+            'total_end' => $addInfo['total_end'],
+            'avg_distance_start' => $addInfo['avg_distance_start'],
+            'avg_distance_end' => $addInfo['avg_distance_end'],
+            'top_return_stations' => $addInfo['top_return_stations'],
+            'top_departure_stations' => $addInfo['top_departure_stations'],
         ]);
     }
 }

@@ -9,11 +9,19 @@
     </p>
     <p class="station_text">
       Total number of journeys starting from the station:
-      <span>{{ station.start_trips }}</span>
+      <span>{{ station.total_start }}</span>
     </p>
     <p class="station_text">
       Total number of journeys ending at the station:
-      <span>{{ station.end_trips }}</span>
+      <span>{{ station.total_end }}</span>
+    </p>
+    <p class="station_text">
+      The average distance of a journey starting from the station:
+      <span>{{ station.avg_distance_start }} km</span>
+    </p>
+    <p class="station_text">
+      The average distance of a journey ending at the station:
+      <span>{{ station.avg_distance_end }} km</span>
     </p>
   </div>
   <div class="station__location" id="map"></div>
@@ -32,7 +40,7 @@ export default {
 .station__info {
   border: 2px solid #257bc9;
   width: 450px;
-  height: 300px;
+  /* height: 300px; */
   background-color: rgb(38 124 201 / 88%);
   border-radius: 15px;
   padding: 20px;
