@@ -162,17 +162,7 @@ class StationsRepositoryTest extends TestCase
         // Configure the mock PDO object to return the mock PDOStatement object when prepare is called
         $this->connectionStub->expects($this->once())
             ->method('prepare')
-            ->with("SELECT stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y,
-        (
-            SELECT COUNT(DISTINCT id) 
-            FROM trips
-            WHERE departure_station_id = stations.id
-        ) AS start_trips,
-        (
-            SELECT COUNT(DISTINCT id) 
-            FROM trips
-            WHERE return_station_id = stations.id
-        ) AS end_trips
+            ->with("SELECT stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y
         FROM stations
         WHERE stations.id = :id
         GROUP BY stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y;")
