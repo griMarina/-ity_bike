@@ -19,7 +19,6 @@
         Prev
       </button>
     </li>
-    <!-- Visible Buttons Start -->
     <li v-for="page in pages">
       <button
         class="pagination__btn"
@@ -30,7 +29,6 @@
         {{ page.name }}
       </button>
     </li>
-    <!-- Visible Buttons End -->
     <li>
       <button
         class="pagination__btn"
@@ -95,17 +93,13 @@ export default {
   },
   computed: {
     startPage() {
-      // When on the first page
       if (this.currentPage === 1) {
         return 1;
       }
-
-      // When on the last page
       if (this.currentPage === this.totalPages) {
         return this.totalPages - this.maxVisibleButtons;
       }
-
-      // When inbetween
+      
       return this.currentPage - 1;
     },
     isInFirstPage() {

@@ -48,9 +48,8 @@ export default {
 .navbar {
   display: flex;
   align-items: center;
-  color: #ffffff;
-  font-size: 20px;
   height: 80px;
+  font-size: 14px;
 }
 .navbar__btns {
   margin-left: auto;

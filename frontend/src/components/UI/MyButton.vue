@@ -19,6 +19,7 @@ export default {
   text-align: center;
   color: white;
   border-radius: 5px;
+  font-size: inherit;
 }
 
 .btn:hover,

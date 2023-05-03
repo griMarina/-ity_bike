@@ -2,27 +2,31 @@
   <div class="station__info">
     <h2 class="station__header">{{ station.name }}</h2>
     <p class="station_text">
-      Address: <span>{{ station.address }}</span>
+      Address:<span>{{ station.address }}</span>
     </p>
     <p class="station_text">
-      Capacity: <span>{{ station.capacity }}</span>
+      Capacity:<span>{{ station.capacity }}</span>
     </p>
-    <p class="station_text">
-      Total number of journeys starting from the station:
-      <span>{{ station.total_start }}</span>
-    </p>
-    <p class="station_text">
-      Total number of journeys ending at the station:
-      <span>{{ station.total_end }}</span>
-    </p>
-    <p class="station_text">
-      The average distance of a journey starting from the station:
-      <span>{{ station.avg_distance_start }} km</span>
-    </p>
-    <p class="station_text">
-      The average distance of a journey ending at the station:
-      <span>{{ station.avg_distance_end }} km</span>
-    </p>
+    <ul class="station_text">
+      Total number of journeys
+      <li>
+        starting from the station:<span>{{ station.total_start }}</span>
+      </li>
+      <li>
+        ending at the station:<span>{{ station.total_end }}</span>
+      </li>
+    </ul>
+    <ul class="station_text">
+      The average distance of a journey
+      <li>
+        starting from the station:<span
+          >{{ station.avg_distance_start }} km</span
+        >
+      </li>
+      <li>
+        ending at the station:<span>{{ station.avg_distance_end }} km</span>
+      </li>
+    </ul>Í
   </div>
   <div class="station__location" id="map"></div>
 </template>
@@ -40,7 +44,7 @@ export default {
 .station__info {
   border: 2px solid #257bc9;
   width: 450px;
-  /* height: 300px; */
+  height: fit-content;
   background-color: rgb(38 124 201 / 88%);
   border-radius: 15px;
   padding: 20px;
@@ -54,11 +58,17 @@ export default {
   text-align: center;
 }
 .station_text {
-  margin-bottom: 10px;
+  margin-top: 12px;
 }
 
 .station_text span {
-  font-weight: 600;
+  margin-left: 10px;
+}
+
+.station_text li {
+  margin-top: 8px;
+  margin-left: 40px;
+  list-style-type: circle;
 }
 .station__location {
   width: 550px;
