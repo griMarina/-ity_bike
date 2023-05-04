@@ -17,7 +17,6 @@ class TripsRepository
 
     public function getEntries(): int
     {
-
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM `trips`;");
         $stmt->execute();
 
@@ -106,24 +105,35 @@ class TripsRepository
         $this->pdo->commit();
     }
 
-    public function validateCsv(Reader $csv): ResultSet
+    private function validateCsv(Reader $csv): ResultSet
     {
         $statement = (new Statement())
             ->where(function (array $row) {
-                if (!isset($row['Duration (sec.)']) || !isset($row['Covered distance (m)'])) {
-                    throw new InvalidArgumentException('File contains invalid data');
+              
+                $departure = \DateTime::createFromFormat('Y-m-d\TH:i:s', $row['Departure']);
+                $return = \DateTime::createFromFormat('Y-m-d\TH:i:s', $row['Return']);
+
+                if ($departure === false || $return === false) {
+                    return false;
                 }
 
-                try {
-                    new \DateTime($row['Departure']);
-                    new \DateTime($row['Return']);
-                } catch (InvalidArgumentException $e) {
-                    return false; // skip row if departure or return isn't parseable
+                if ($return < $departure) {
+                    return false;
                 }
 
-                return ($row['Duration (sec.)'] >= 10) && ($row['Covered distance (m)'] >= 10);
+                if (!ctype_digit($row['Departure station id']) || !ctype_digit($row['Return station id']) || !ctype_digit($row['Duration (sec.)']) || !ctype_digit($row['Covered distance (m)'])) {
+                    return false;
+                }
+
+                $duration = (int) $row['Duration (sec.)'];
+                $distance = (int) $row['Covered distance (m)'];
+
+                if ($duration < 10 || $distance < 10) {
+                    return false;
+                }
+
+                return $row;
             });
-
 
         $validCsv = $statement->process($csv);
         return $validCsv;

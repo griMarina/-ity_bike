@@ -26,7 +26,7 @@
       <li>
         ending at the station:<span>{{ station.avg_distance_end }} km</span>
       </li>
-    </ul>Í
+    </ul>
   </div>
   <div class="station__location" id="map"></div>
 </template>

@@ -17,13 +17,14 @@ class ImportStations implements ActionInterface
         private string $filename,
         private StationsRepository $stationsRepository
     ) {
-        if (pathinfo($filename, PATHINFO_EXTENSION) !== 'csv') {
-            throw new InvalidArgumentException('Invalid file extension. Only CSV files are allowed.');
-        }
     }
 
     public function handle(Request $request): Response
     {
+        if (pathinfo($this->filename, PATHINFO_EXTENSION) !== 'csv') {
+            return new ErrorResponse('Invalid file extension. Only CSV files are allowed.');
+        }
+
         try {
             $csv = Reader::createFromPath($this->filename);
             $csv->setHeaderOffset(0);

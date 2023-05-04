@@ -6,7 +6,7 @@
         class="search"
         v-focus
         v-model="searchQuery"
-        placeholder="Search trip ..."
+        placeholder="Search trip"
       ></my-input>
       <my-select v-model="selectedSort" :options="sortOptions"></my-select>
     </div>

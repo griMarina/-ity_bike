@@ -64,41 +64,12 @@ class TripsRepositoryTest extends TestCase
         $this->tripsRepository->importCsv($csv);
     }
 
-    public function testImportCsvThrowsExceptionWhenCsvContainsInvalidData(): void
+    public function testTripDurationIsLessThanTenSec(): void
     {
-        // Create a CSV file with invalid data
-        $csvData = [
-            ['Invalid'],
-            ['Data']
-        ];
-
-        $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
-        $csvFile = fopen($csvFilePath, 'w');
-
-        foreach ($csvData as $row) {
-            fputcsv($csvFile, $row);
-        }
-
-        fclose($csvFile);
-
-        $csv = Reader::createFromPath($csvFilePath);
-        $csv->setHeaderOffset(0);
-
-        // Expect an exception to be thrown when the importCsv() method is called
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('File contains invalid data');
-
-        $this->tripsRepository->importCsv($csv);
-    }
-
-    public function testValidateCsv(): void
-    {
-        // Create a CSV file with valid and invalid data
         $csvData = [
             ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
             ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'],
-            ['2021-05-01T00:00:22', '2021-05-01T00:05:55', '3', 'Station C', '4', 'Station D', '5', '10'],
-            ['2021-05-01T00:00:33', '2021-05-01T00:06:00', '5', 'Station E', '6', 'Station F', '500', '5'],
+            ['2021-05-01T00:00:33', '2021-05-01T00:06:00', '5', 'Station E', '6', 'Station F', '500', '0'],
         ];
 
         $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
@@ -113,23 +84,138 @@ class TripsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Call the validateCsv() method and check the ResultSet
-        $resultSet = $this->tripsRepository->validateCsv($csv);
+        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
+        $reflection = new \ReflectionClass($this->tripsRepository);
+        $method = $reflection->getMethod('validateCsv');
+        $method->setAccessible(true);
 
-        // Verify that the ResultSet only contains the valid rows
-        $expectedResult =
-            [
-                'Departure' => '2021-05-01T00:00:11',
-                'Return' => '2021-05-01T00:04:34',
-                'Departure station id' => '1',
-                'Departure station name' => 'Station A',
-                'Return station id' => '2',
-                'Return station name' => 'Station B',
-                'Covered distance (m)' => '1000',
-                'Duration (sec.)' => '100',
-            ];
+        $resultSet = $method->invoke($this->tripsRepository, $csv);
 
-        $this->assertEquals($expectedResult, $resultSet->fetchOne());
+        $this->assertCount(1, $resultSet);
+    }
+
+    public function testTripDistanceIsLessThanTenMetres(): void
+    {
+        $csvData = [
+            ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
+            ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'],
+            ['2021-05-01T00:00:33', '2021-05-01T00:06:00', '5', 'Station E', '6', 'Station F', '0', '500'],
+        ];
+
+        $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
+        $csvFile = fopen($csvFilePath, 'w');
+
+        foreach ($csvData as $row) {
+            fputcsv($csvFile, $row);
+        }
+
+        fclose($csvFile);
+
+        $csv = Reader::createFromPath($csvFilePath);
+        $csv->setHeaderOffset(0);
+
+        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
+        $reflection = new \ReflectionClass($this->tripsRepository);
+        $method = $reflection->getMethod('validateCsv');
+        $method->setAccessible(true);
+
+        $resultSet = $method->invoke($this->tripsRepository, $csv);
+
+        $this->assertCount(1, $resultSet);
+    }
+
+    public function testArrivalHappensBeforeDeparture(): void
+    {
+        $csvData = [
+            ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
+            ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'],
+            ['2021-05-01T00:00:33', '2020-05-01T00:06:00', '5', 'Station E', '6', 'Station F', '1000', '100'],
+        ];
+
+        $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
+        $csvFile = fopen($csvFilePath, 'w');
+
+        foreach ($csvData as $row) {
+            fputcsv($csvFile, $row);
+        }
+
+        fclose($csvFile);
+
+        $csv = Reader::createFromPath($csvFilePath);
+        $csv->setHeaderOffset(0);
+
+        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
+        $reflection = new \ReflectionClass($this->tripsRepository);
+        $method = $reflection->getMethod('validateCsv');
+        $method->setAccessible(true);
+
+        $resultSet = $method->invoke($this->tripsRepository, $csv);
+
+        $this->assertCount(1, $resultSet);
+    }
+
+    public function testInvalidIntegers(): void
+    {
+        $csvData = [
+            ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
+            ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'], // valid row
+            ['2021-05-01T00:00:33', '2021-05-01T00:06:00', '3_id', 'Station E', '4', 'Station F', '1000', '100'], // invalid departure station id
+            ['2021-05-01T00:00:33', '2021-05-01T00:06:00', '5', 'Station C', '-6', 'Station D', '1000', '100'], // invalid return station id
+            ['2021-05-01T00:00:33', '2021-05-01T00:06:00', '7', 'Station E', '8', 'Station F', '-100m', '100'], // invalid distance
+            ['2021-05-01T00:00:33', '2021-05-01T00:06:00', '9', 'Station E', '10', 'Station F', '100', '100sec'], // invalid duration
+        ];
+
+        $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
+        $csvFile = fopen($csvFilePath, 'w');
+
+        foreach ($csvData as $row) {
+            fputcsv($csvFile, $row);
+        }
+
+        fclose($csvFile);
+
+        $csv = Reader::createFromPath($csvFilePath);
+        $csv->setHeaderOffset(0);
+
+        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
+        $reflection = new \ReflectionClass($this->tripsRepository);
+        $method = $reflection->getMethod('validateCsv');
+        $method->setAccessible(true);
+
+        $resultSet = $method->invoke($this->tripsRepository, $csv);
+
+        $this->assertCount(1, $resultSet);
+    }
+
+    public function testArrivalAndDepartureAreNotParseable(): void
+    {
+        $csvData = [
+            ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
+            ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'], 
+            ['invalid_departure_data', '2021-05-01T00:06:00', '9', 'Station E', '10', 'Station F', '100', '100'],
+            ['2021-05-01T00:00:33', 'invalid_return_data', '9', 'Station E', '10', 'Station F', '100', '100'],
+        ];
+
+        $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
+        $csvFile = fopen($csvFilePath, 'w');
+
+        foreach ($csvData as $row) {
+            fputcsv($csvFile, $row);
+        }
+
+        fclose($csvFile);
+
+        $csv = Reader::createFromPath($csvFilePath);
+        $csv->setHeaderOffset(0);
+
+        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
+        $reflection = new \ReflectionClass($this->tripsRepository);
+        $method = $reflection->getMethod('validateCsv');
+        $method->setAccessible(true);
+
+        $resultSet = $method->invoke($this->tripsRepository, $csv);
+
+        $this->assertCount(1, $resultSet);
     }
 
     public function testGetAllReturnsExpectedData(): void
@@ -185,7 +271,7 @@ class TripsRepositoryTest extends TestCase
             $row['distance'] = round(($row['distance'] / 1000), 2);
             $row['duration'] = $row['duration'] / 60;
         }
-        
+
         $result = $this->tripsRepository->getAll(1, 20);
 
         $this->assertEquals($expected, $result);

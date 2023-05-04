@@ -4,8 +4,9 @@ namespace Actions;
 
 use PHPUnit\Framework\TestCase;
 use Grimarina\CityBike\Repositories\StationsRepository;
-use Grimarina\CityBike\Exceptions\InvalidArgumentException;
 use Grimarina\CityBike\Actions\Stations\ImportStations;
+use Grimarina\CityBike\http\{Request, ErrorResponse};
+
 
 class ImportStationsTest extends TestCase
 {
@@ -13,10 +14,12 @@ class ImportStationsTest extends TestCase
     {
         $filename = 'stations.txt';
         $stationsRepository = $this->createMock(StationsRepository::class);
+        $mockRequest = $this->createMock(Request::class);
+        $action = new ImportStations($filename, $stationsRepository);
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid file extension. Only CSV files are allowed.');
+        $response = $action->handle($mockRequest);
 
-        new ImportStations($filename, $stationsRepository);
+        $this->assertInstanceOf(ErrorResponse::class, $response);
+        $this->assertEquals('Invalid file extension. Only CSV files are allowed.', $response->payload()['reason']);
     }
 }
