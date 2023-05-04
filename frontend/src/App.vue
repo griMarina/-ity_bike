@@ -50,4 +50,10 @@ export default {
   color: #257bc9;
   background-color: #f9faf8;
 }
+
+@media (max-width: 794px) {
+  .header span {
+    font-size: 20px;
+  }
+}
 </style>

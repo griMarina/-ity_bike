@@ -12,7 +12,7 @@
     >
       {{ trip.return_station_name }}
     </td>
-    <td>{{ trip.distance }}</td>
+    <td>{{ formattedDistance }}</td>
     <td>{{ formattedDuration }}</td>
   </tr>
 </template>
@@ -27,14 +27,18 @@ export default {
   },
   computed: {
     formattedDuration() {
-      const min = Math.floor(this.trip.duration);
-      const sec = Math.round((this.trip.duration - min) * 60);
+      const duration = this.trip.duration / 60;
+      const min = Math.floor(duration);
+      const sec = Math.round((duration - min) * 60);
 
       if (min > 0) {
         return `${min} m ${sec} s`;
       } else {
         return `${sec} s`;
       }
+    },
+    formattedDistance() {
+      return (this.trip.distance / 1000).toFixed(2);
     },
   },
 };
@@ -61,5 +65,12 @@ tr {
 
 tr:nth-child(even) {
   background: #b2cfeb;
+}
+
+@media (max-width: 794px) {
+  td:nth-child(3),
+  td:nth-child(4) {
+    display: none;
+  }
 }
 </style>

@@ -57,4 +57,10 @@ th:first-child,
 th:nth-child(2) {
   width: 35%;
 }
+@media (max-width: 794px) {
+  th:nth-child(3),
+  th:nth-child(4) {
+    display: none;
+  }
+}
 </style>

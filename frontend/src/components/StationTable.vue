@@ -61,4 +61,10 @@ th:nth-child(2),
 th:nth-child(3) {
   width: 35%;
 }
+
+@media (max-width: 794px) {
+  th:last-child {
+    display: none;
+  }
+}
 </style>

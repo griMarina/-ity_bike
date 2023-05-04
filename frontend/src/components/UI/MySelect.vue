@@ -36,4 +36,10 @@ export default {
   border-radius: 5px;
   font-size: 14px;
 }
+
+@media (max-width: 794px) {
+  .select {
+    font-size: 12px;
+  }
+}
 </style>

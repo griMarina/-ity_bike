@@ -21,4 +21,13 @@ export default {
   color: #257bc9;
   font-size: 24px;
 }
+
+@media (max-width: 794px) {
+  .no-results img {
+    width: 70px;
+  }
+  .no-results p  {
+    font-size: 16px;
+  }
+}
 </style>

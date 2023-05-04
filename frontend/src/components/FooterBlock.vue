@@ -20,8 +20,7 @@ export default {};
   display: flex;
   align-items: center;
   color: #ffffff;
-  font-size: 20px;
+  font-size: 14px;
   height: 80px;
-  flex: 0 0 auto;
 }
 </style>

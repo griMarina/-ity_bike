@@ -34,12 +34,7 @@ class TripsRepository
 
         $stmt->execute();
 
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        foreach ($result as &$row) {
-            $row['distance'] = round(($row['distance'] / 1000), 2);
-            $row['duration'] = $row['duration'] / 60;
-        }
-        return $result;
+        return  $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function getById(int $id): ?Trip
@@ -109,7 +104,7 @@ class TripsRepository
     {
         $statement = (new Statement())
             ->where(function (array $row) {
-              
+
                 $departure = \DateTime::createFromFormat('Y-m-d\TH:i:s', $row['Departure']);
                 $return = \DateTime::createFromFormat('Y-m-d\TH:i:s', $row['Return']);
 

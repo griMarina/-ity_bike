@@ -20,11 +20,11 @@
       The average distance of a journey
       <li>
         starting from the station:<span
-          >{{ station.avg_distance_start }} km</span
+          >{{ formattedAvgStart }} km</span
         >
       </li>
       <li>
-        ending at the station:<span>{{ station.avg_distance_end }} km</span>
+        ending at the station:<span>{{ formattedAvgEnd }} km</span>
       </li>
     </ul>
   </div>
@@ -38,6 +38,14 @@ export default {
       required: true,
     },
   },
+  computed: {
+    formattedAvgStart() {
+      return (this.station.avg_distance_start / 1000).toFixed(2);
+    },
+    formattedAvgEnd() {
+      return (this.station.avg_distance_end / 1000).toFixed(2);
+    },
+  }
 };
 </script>
 <style scoped>
@@ -54,7 +62,7 @@ export default {
 }
 
 .station__header {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
 }
 .station_text {
@@ -80,6 +88,22 @@ export default {
 @media (max-width: 1222px) {
   .station__info {
     margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 794px) {
+  .station__info {
+    width: 300px;
+    font-size: 14px;
+  }
+
+  .station_text {
+  margin-top: 8px;
+}
+
+  .station__location {
+    width: 300px;
+    height: 300px;
   }
 }
 </style>

@@ -42,4 +42,10 @@ tr:nth-child(even) {
   color: #257bc9;
   cursor: pointer;
 }
+
+@media (max-width: 794px) {
+  td:last-child {
+    display: none;
+  }
+}
 </style>

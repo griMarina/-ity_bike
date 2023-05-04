@@ -61,4 +61,10 @@ export default {
 .navbar__btn {
   min-width: 80px;
 }
+
+@media (max-width: 794px) {
+  .navbar {
+    font-size: 12px;
+  }
+}
 </style>
