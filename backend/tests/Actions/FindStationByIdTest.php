@@ -20,7 +20,7 @@ class FindStationByIdTest extends TestCase
         $this->mockRequest = $this->createMock(Request::class);
     }
 
-    public function testItReturnsSuccessfulResponse(): void
+    public function testItReturnsSuccessfulResponseWithStatus200(): void
     {
         $station = new Station(1, 'Test Station 1', '', '', 'Test Address 1', 'Test Address 1', '', '', '', 10, 60.123, 24.456);
         $info = [
@@ -64,16 +64,17 @@ class FindStationByIdTest extends TestCase
         ];
 
         $this->assertInstanceOf(SuccessfulResponse::class, $response);
+        $this->assertEquals(200, $response->status());
         $this->assertEquals($expectedRestult, $response->payload()['data']);
     }
 
-    public function testItReturnsErrorResponseIfStationNotFound(): void
+    public function testItReturnsErrorResponseWithStatus404IfStationNotFound(): void
     {
         $this->stationsRepository
             ->expects($this->once())
             ->method('getById')
             ->with(1)
-            ->willThrowException(new StationNotFoundException('Cannot find station: 1'));
+            ->willThrowException(new StationNotFoundException('Cannot find station: 1.'));
 
         $this->mockRequest
             ->expects($this->once())
@@ -85,6 +86,23 @@ class FindStationByIdTest extends TestCase
         $response = $action->handle($this->mockRequest);
 
         $this->assertInstanceOf(ErrorResponse::class, $response);
-        $this->assertEquals('Cannot find station: 1', $response->payload()['reason']);
+        $this->assertEquals(404, $response->status());
+        $this->assertEquals('Cannot find station: 1.', $response->payload()['reason']);
+    }
+
+    public function testItReturnsErrorResponseWithStatus400IfStationIdInvalid(): void
+    {
+        $this->mockRequest
+            ->expects($this->once())
+            ->method('query')
+            ->with('id')
+            ->willReturn('invalid_id');
+
+        $action = new FindStationById($this->stationsRepository);
+        $response = $action->handle($this->mockRequest);
+
+        $this->assertInstanceOf(ErrorResponse::class, $response);
+        $this->assertEquals(400, $response->status());
+        $this->assertEquals('Invalid station id.', $response->payload()['reason']);
     }
 }

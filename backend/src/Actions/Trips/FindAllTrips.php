@@ -18,23 +18,28 @@ class FindAllTrips implements ActionInterface
     {
         try {
             $page = $request->query('page');
-            $page = ($page > 0) ? $page : 1;
-
             $limit = $request->query('limit');
-            $limit = ($limit > 0) ? $limit : 1;
         } catch (HttpException $e) {
             return new ErrorResponse($e->getMessage());
+        }
+
+        if (!filter_var($page, FILTER_VALIDATE_INT) || !filter_var($limit, FILTER_VALIDATE_INT)) {
+            return new ErrorResponse('Invalid parameters.');
         }
 
         try {
             $entries = $this->tripsRepository->getEntries();
             $trips = $this->tripsRepository->getAll($page, $limit);
 
+            if (empty($trips)) {
+                return new ErrorResponse('No trips found.', 404);
+            }
+
             $data['entries'] = $entries;
             $data['trips'] = $trips;
             return new SuccessfulResponse($data);
         } catch (TripNotFoundException $e) {
-            return new ErrorResponse($e->getMessage());
+            return new ErrorResponse($e->getMessage(), 404);
         }
     }
 }
