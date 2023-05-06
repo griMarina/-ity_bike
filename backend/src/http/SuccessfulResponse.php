@@ -9,13 +9,18 @@ class SuccessfulResponse extends Response
     protected const SUCCESS = true;
 
     public function __construct(
-        // Successful response contains an array with data, empty by default
-        private array $data = []
+        private array $data = [],
+        private int $statusCode = 200
     ) {
     }
 
     public function payload(): array
     {
         return ['data' => $this->data];
+    }
+
+    public function status(): int
+    {
+        return $this->statusCode;
     }
 }

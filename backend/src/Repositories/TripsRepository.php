@@ -37,26 +37,6 @@ class TripsRepository
         return  $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function getById(int $id): ?Trip
-    {
-        $stmt = $this->pdo->prepare("SELECT id, departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration FROM `trips` WHERE trips.id = :id");
-
-        $stmt->execute(
-            [
-                ':id' => (int) $id
-            ]
-        );
-
-        $result = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Trip::class)[0] ?? null;
-
-        if ($result === null) {
-            $message = "Cannot find trip: $id";
-            throw new TripNotFoundException($message);
-        }
-
-        return $result;
-    }
-
     public function importCsv(Reader $csv): void
     {
         ini_set('max_execution_time', 300);

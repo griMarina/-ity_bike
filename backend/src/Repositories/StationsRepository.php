@@ -53,7 +53,7 @@ class StationsRepository
         $result = $stmt->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Station::class)[0] ?? null;
 
         if ($result === null) {
-            $message = "Cannot find station: $id";
+            $message = "Cannot find station: $id.";
             throw new StationNotFoundException($message);
         }
 
@@ -99,7 +99,7 @@ class StationsRepository
                     ]
                 );
             } catch (\Error $e) {
-                throw new InvalidArgumentException('File contains invalid data');
+                throw new InvalidArgumentException('File contains invalid data.');
             }
         }
     }

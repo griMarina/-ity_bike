@@ -3,12 +3,12 @@
 use Grimarina\CityBike\http\{Request, ErrorResponse};
 use Grimarina\CityBike\Exceptions\HttpException;
 use Grimarina\CityBike\Actions\Stations\{ImportStations, FindAllStations, FindStationById};
-use Grimarina\CityBike\Actions\Trips\{ImportTrips, FindAllTrips, FindTripById};
+use Grimarina\CityBike\Actions\Trips\{ImportTrips, FindAllTrips};
 use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
 
 // Set CORS headers
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -40,8 +40,6 @@ $routes = [
         '/stations/show' => new FindAllStations(new StationsRepository($pdo)),
         '/station/show' => new FindStationById(new StationsRepository($pdo)),
         '/trips/show' => new FindAllTrips(new TripsRepository($pdo)),
-        '/trip/show' => new FindTripById(new TripsRepository($pdo)),
-
     ],
     'POST' => [
         '/stations/import' => new ImportStations(__DIR__ . '/data/stations.csv', new StationsRepository($pdo)),

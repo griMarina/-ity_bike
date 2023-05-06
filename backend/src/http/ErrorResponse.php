@@ -9,9 +9,14 @@ class ErrorResponse extends Response
     protected const SUCCESS = false;
 
     public function __construct(
-        // An error response contains a string with the error message, 'Something goes wrong' by default
-        private string $reason = 'Something went wrong'
+        private string $reason = 'Something went wrong',
+        private int $statusCode = 400
     ) {
+    }
+
+    public function status(): int
+    {
+        return $this->statusCode;
     }
 
     public function payload(): array

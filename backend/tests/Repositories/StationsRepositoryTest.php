@@ -89,7 +89,7 @@ class StationsRepositoryTest extends TestCase
 
         // Expect an exception to be thrown when the importCsv() method is called
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('File contains invalid data');
+        $this->expectExceptionMessage('File contains invalid data.');
 
         $this->stationRepository->importCsv($csv);
     }
@@ -183,7 +183,7 @@ class StationsRepositoryTest extends TestCase
         $this->connectionStub->method('prepare')->willReturn($this->statementMock);
 
         $this->expectException(StationNotFoundException::class);
-        $this->expectExceptionMessage('Cannot find station: 1');
+        $this->expectExceptionMessage('Cannot find station: 1.');
 
         $this->stationRepository->getById(1);
     }

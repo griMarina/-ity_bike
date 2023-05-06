@@ -4,7 +4,7 @@ namespace Grimarina\CityBike\Actions\Stations;
 
 use Grimarina\CityBike\http\{ErrorResponse, Request, Response, SuccessfulResponse};
 use Grimarina\CityBike\Repositories\StationsRepository;
-use Grimarina\CityBike\Exceptions\{StationNotFoundException, HttpException};
+use Grimarina\CityBike\Exceptions\{StationNotFoundException};
 use Grimarina\CityBike\Actions\ActionInterface;
 
 class FindStationById implements ActionInterface
@@ -17,17 +17,17 @@ class FindStationById implements ActionInterface
     public function handle(Request $request): Response
     {
 
-        try {
-            $id = (int) $request->query('id');
-        } catch (HttpException $e) {
-            return new ErrorResponse($e->getMessage());
+        $id =  $request->query('id');
+
+        if (!filter_var($id, FILTER_VALIDATE_INT)) {
+            return new ErrorResponse('Invalid station id.');
         }
 
         try {
             $station = $this->stationsRepository->getById($id);
             $info = $this->stationsRepository->getMoreInfoById($id);
         } catch (StationNotFoundException $error) {
-            return new ErrorResponse($error->getMessage());
+            return new ErrorResponse($error->getMessage(), 404);
         }
 
         return new SuccessfulResponse([

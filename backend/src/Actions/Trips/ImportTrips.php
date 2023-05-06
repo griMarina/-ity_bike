@@ -28,10 +28,9 @@ class ImportTrips implements ActionInterface
             $csv = Reader::createFromPath($this->filename);
             $csv->setHeaderOffset(0);
             $this->tripsRepository->importCsv($csv);
-            return new SuccessfulResponse(['message' => 'CSV file imported successfully']);
+            return new SuccessfulResponse(['message' => 'CSV file imported successfully.']);
         } catch (ImportException $e) {
             return new ErrorResponse($e->getMessage());
         }
     }
-
 }

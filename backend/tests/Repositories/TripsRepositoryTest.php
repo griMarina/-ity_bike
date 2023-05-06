@@ -5,8 +5,6 @@ namespace Repositories;
 use PHPUnit\Framework\TestCase;
 use League\Csv\Reader;
 use Grimarina\CityBike\Repositories\TripsRepository;
-use Grimarina\CityBike\Exceptions\{InvalidArgumentException, TripNotFoundException};
-use Grimarina\CityBike\Entities\Trip;
 
 class TripsRepositoryTest extends TestCase
 {
@@ -191,7 +189,7 @@ class TripsRepositoryTest extends TestCase
     {
         $csvData = [
             ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
-            ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'], 
+            ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'],
             ['invalid_departure_data', '2021-05-01T00:06:00', '9', 'Station E', '10', 'Station F', '100', '100'],
             ['2021-05-01T00:00:33', 'invalid_return_data', '9', 'Station E', '10', 'Station F', '100', '100'],
         ];
@@ -267,48 +265,8 @@ class TripsRepositoryTest extends TestCase
             ->with("SELECT id, departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration FROM `trips` LIMIT :offset, :limit;")
             ->willReturn($this->statementMock);
 
-        foreach ($expected as &$row) {
-            $row['distance'] = round(($row['distance'] / 1000), 2);
-            $row['duration'] = $row['duration'] / 60;
-        }
-
         $result = $this->tripsRepository->getAll(1, 20);
 
         $this->assertEquals($expected, $result);
-    }
-
-    public function testGetByIdReturnsTripObjectIfFound(): void
-    {
-        $this->statementMock->expects($this->once())
-            ->method('execute')
-            ->with([':id' => 1])
-            ->willReturn(true);
-
-        $this->statementMock->expects($this->once())
-            ->method('fetchAll')
-            ->with(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Trip::class)
-            ->willReturn([new Trip()]);
-
-        $this->connectionStub->expects($this->once())
-            ->method('prepare')
-            ->with("SELECT id, departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration FROM `trips` WHERE trips.id = :id")
-            ->willReturn($this->statementMock);
-
-        $result = $this->tripsRepository->getById(1);
-
-        $this->assertInstanceOf(Trip::class, $result);
-    }
-
-    public function testGetByIdThrowsExceptionIfTripNotFound(): void
-    {
-        $this->statementMock->method('execute')->willReturn(null);
-        $this->statementMock->method('fetchAll')->willReturn([]);
-
-        $this->connectionStub->method('prepare')->willReturn($this->statementMock);
-
-        $this->expectException(TripNotFoundException::class);
-        $this->expectExceptionMessage('Cannot find trip: 1');
-
-        $this->tripsRepository->getById(1);
     }
 }
