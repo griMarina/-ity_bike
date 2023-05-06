@@ -90,8 +90,12 @@ export default {
     searchedAndSortedStations() {
       return this.sortedStations.filter((st) => {
         return (
-          st.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          st.address.toLowerCase().includes(this.searchQuery.toLowerCase())
+          st.name
+            .toLowerCase()
+            .includes(this.searchQuery.trim().toLowerCase()) ||
+          st.address
+            .toLowerCase()
+            .includes(this.searchQuery.trim().toLowerCase())
         );
       });
     },

@@ -1,6 +1,6 @@
 <template>
-  <select class="select" v-model="modelValue" @change="changeOption">
-    <option value="" disabled selected>Filter by</option>
+  <select class="select" v-model="selectedValue" @change="changeOption">
+    <option value="" disabled selected>Order by</option>
     <option v-for="option in options" :key="option.value" :value="option.value">
       {{ option.name }}
     </option>
@@ -10,13 +10,23 @@
 <script>
 export default {
   name: "my-select",
-  modelValue: {
-    type: String,
+  data() {
+    return {
+      selectedValue: "",
+    };
   },
   props: {
     options: {
       type: Array,
       default: () => [],
+    },
+    modelValue: {
+      type: String,
+    },
+  },
+  watch: {
+    modelValue(newValue) {
+      this.selectedValue = newValue;
     },
   },
   methods: {
