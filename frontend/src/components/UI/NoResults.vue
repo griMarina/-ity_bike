@@ -1,7 +1,7 @@
 <template>
   <div class="no-results">
     <img src="/public/no-results.png" alt="no results" />
-    <p>No search results...</p>
+    <p><slot></slot></p>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
   .no-results img {
     width: 70px;
   }
-  .no-results p  {
+  .no-results p {
     font-size: 16px;
   }
 }

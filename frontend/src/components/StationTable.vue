@@ -14,7 +14,7 @@
       :key="station.id"
     ></station-row>
   </table>
-  <no-results v-else></no-results>
+  <no-results v-else>No stations found</no-results>
 </template>
 
 <script>

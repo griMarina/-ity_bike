@@ -10,7 +10,7 @@
     </thead>
     <trip-row v-for="trip in trips" :trip="trip" :key="trip.id"></trip-row>
   </table>
-  <no-results v-else></no-results>
+  <no-results v-else>No trips found</no-results>
 </template>
 
 <script>

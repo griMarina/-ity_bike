@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <div class="station" v-show="!isLoading">
-      <station-info :station="station"></station-info>
+      <station-info :station="station" v-if="!errorMessage"></station-info>
+      <no-results v-else>
+        {{ errorMessage }}
+      </no-results>
     </div>
     <spinner v-show="isLoading"></spinner>
   </div>
@@ -11,6 +14,7 @@
 import axios from "axios";
 import L from "leaflet";
 import StationInfo from "../components/StationInfo.vue";
+import NoResults from "../components/UI/NoResults.vue";
 export default {
   components: {
     StationInfo,
@@ -21,6 +25,7 @@ export default {
       isLoading: false,
       map: null,
       marker: null,
+      errorMessage: "",
     };
   },
   methods: {
@@ -38,7 +43,7 @@ export default {
           this.map
         );
       } catch (error) {
-        console.log(e);
+        this.errorMessage = error.response.data.reason;
       } finally {
         this.isLoading = false;
       }

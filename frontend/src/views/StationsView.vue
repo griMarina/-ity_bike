@@ -88,15 +88,9 @@ export default {
       });
     },
     searchedAndSortedStations() {
-      return this.sortedStations.filter((st) => {
-        return (
-          st.name
-            .toLowerCase()
-            .includes(this.searchQuery.trim().toLowerCase()) ||
-          st.address
-            .toLowerCase()
-            .includes(this.searchQuery.trim().toLowerCase())
-        );
+      const regex = new RegExp(this.searchQuery.trim(), "i");
+      return this.sortedStations.filter((station) => {
+        return regex.test(station.name) || regex.test(station.address);
       });
     },
   },

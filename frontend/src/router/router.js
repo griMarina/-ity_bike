@@ -3,7 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import StationsView from "@/views/StationsView.vue";
 import StationView from "@/views/StationView.vue";
 import TripsView from "@/views/TripsView.vue";
-// import TripView from "@/views/TripView.vue";
+import NotFound from "@/views/NotFound.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -23,6 +23,10 @@ const router = createRouter({
     {
       path: "/trips",
       component: TripsView,
+    },
+    {
+      path: "/:catchAll(.*)",
+      component: NotFound,
     },
   ],
 });

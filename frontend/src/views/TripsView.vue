@@ -87,16 +87,6 @@ export default {
       });
     },
     searchedAndSortedTrips() {
-      // return this.sortedTrips.filter((trip) => {
-      //   return (
-      //     trip.departure_station_name
-      //       .toLowerCase()
-      //       .includes(this.searchQuery.trim().toLowerCase()) ||
-      //     trip.return_station_name
-      //       .toLowerCase()
-      //       .includes(this.searchQuery.trim().toLowerCase())
-      //   );
-      // });
       const regex = new RegExp(this.searchQuery.trim(), "i");
       return this.sortedTrips.filter((trip) => {
         return (
