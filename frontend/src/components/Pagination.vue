@@ -2,6 +2,7 @@
   <ul class="pagination">
     <li>
       <button
+        role="button-first"
         class="pagination__btn"
         type="button"
         @click="onClickFirstPage"
@@ -12,6 +13,7 @@
     </li>
     <li>
       <button
+        role="button-previous"
         class="pagination__btn"
         @click="onClickPreviousPage"
         :disabled="isInFirstPage"
@@ -31,6 +33,7 @@
     </li>
     <li>
       <button
+        role="button-next"
         class="pagination__btn"
         @click="onClickNextPage"
         :disabled="isInLastPage"
@@ -40,6 +43,7 @@
     </li>
     <li>
       <button
+        role="button-last"
         class="pagination__btn"
         @click="onClickLastPage"
         :disabled="isInLastPage"
@@ -99,7 +103,7 @@ export default {
       if (this.currentPage === this.totalPages) {
         return this.totalPages - this.maxVisibleButtons;
       }
-      
+
       return this.currentPage - 1;
     },
     isInFirstPage() {

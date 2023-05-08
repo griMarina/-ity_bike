@@ -1,6 +1,6 @@
 <template>
   <div class="navbar__wrapper">
-    <div class="navbar container">
+    <nav class="navbar container">
       <my-button
         class="navbar__btn"
         @click="$router.push('/')"
@@ -21,7 +21,7 @@
           >Trips</my-button
         >
       </div>
-    </div>
+    </nav>
   </div>
 </template>
 

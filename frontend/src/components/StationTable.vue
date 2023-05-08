@@ -8,12 +8,15 @@
         <th>Capacity</th>
       </tr>
     </thead>
-    <station-row
-      v-for="station in stations"
-      :station="station"
-      :key="station.id"
-    ></station-row>
+    <tbody>
+      <station-row
+        v-for="station in stations"
+        :station="station"
+        :key="station.id"
+      ></station-row>
+    </tbody>
   </table>
+
   <no-results v-else>No stations found</no-results>
 </template>
 

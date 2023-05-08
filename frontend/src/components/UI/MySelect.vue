@@ -1,5 +1,10 @@
 <template>
-  <select class="select" v-model="selectedValue" @change="changeOption">
+  <select
+    role="select"
+    class="select"
+    v-model="selectedValue"
+    @change="changeOption"
+  >
     <option value="" disabled selected>Order by</option>
     <option v-for="option in options" :key="option.value" :value="option.value">
       {{ option.name }}

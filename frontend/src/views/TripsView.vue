@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="header"><span>City Bike Trips</span></h1>
+    <h1 class="header" role="header"><span>City Bike Trips</span></h1>
     <div class="app__btns">
       <my-input
         class="search"

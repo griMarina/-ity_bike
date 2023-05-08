@@ -1,11 +1,15 @@
 <template>
   <tr>
-    <td>{{ station.id }}</td>
-    <td class="station__name" @click="$router.push(`/stations/${station.id}`)">
+    <td role="id">{{ station.id }}</td>
+    <td
+      role="name"
+      class="station__name"
+      @click="$router.push(`/stations/${station.id}`)"
+    >
       {{ station.name }}
     </td>
-    <td>{{ station.address }}</td>
-    <td>{{ station.capacity }}</td>
+    <td role="address">{{ station.address }}</td>
+    <td role="capacity">{{ station.capacity }}</td>
   </tr>
 </template>
 
