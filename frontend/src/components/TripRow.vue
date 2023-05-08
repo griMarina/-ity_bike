@@ -1,19 +1,21 @@
 <template>
   <tr>
     <td
+      role="departure"
       class="station__name"
       @click="$router.push(`/stations/${trip.departure_station_id}`)"
     >
       {{ trip.departure_station_name }}
     </td>
     <td
+      role="return"
       class="station__name"
       @click="$router.push(`/stations/${trip.return_station_id}`)"
     >
       {{ trip.return_station_name }}
     </td>
-    <td>{{ formattedDistance }}</td>
-    <td>{{ formattedDuration }}</td>
+    <td role="distance">{{ formattedDistance }}</td>
+    <td role="duration">{{ formattedDuration }}</td>
   </tr>
 </template>
 

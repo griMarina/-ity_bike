@@ -8,7 +8,9 @@
         <th>Duration (m)</th>
       </tr>
     </thead>
-    <trip-row v-for="trip in trips" :trip="trip" :key="trip.id"></trip-row>
+    <tbody>
+      <trip-row v-for="trip in trips" :trip="trip" :key="trip.id"></trip-row>
+    </tbody>
   </table>
   <no-results v-else>No trips found</no-results>
 </template>

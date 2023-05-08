@@ -15,7 +15,7 @@ Cypress.Commands.add("sortByString", (option) => {
 
   cy.get(`[role=${option}]`).then((items) => {
     const itemKeys = items.toArray().map((el) => el.textContent);
-    const sortedKeys = [...itemKeys].sort();
+    const sortedKeys = itemKeys.sort((a, b) => a.localeCompare(b));
 
     expect(itemKeys).to.deep.equal(sortedKeys);
   });

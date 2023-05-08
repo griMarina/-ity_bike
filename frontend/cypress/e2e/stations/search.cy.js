@@ -6,13 +6,13 @@ describe("Search functionality", () => {
   it("searches for a station by name and displays correct results", () => {
     cy.get("[role=search]").type("Kaivopuisto");
     cy.get("table tbody tr").should("have.length", 1);
-    cy.get("table tbody tr td").contains("Kaivopuisto");
+    cy.get("[role=name]").contains("Kaivopuisto");
   });
 
   it("searches for a station by address and displays correct results", () => {
     cy.get("[role=search]").type("Meritori 1");
     cy.get("table tbody tr").should("have.length", 1);
-    cy.get("table tbody tr td").contains("Kaivopuisto");
+    cy.get("[role=address]").contains("Meritori 1");
   });
 
   it("displays no results for non-existent search query", () => {

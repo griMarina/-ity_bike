@@ -3,6 +3,7 @@
     <h1 class="header" role="header"><span>City Bike Trips</span></h1>
     <div class="app__btns">
       <my-input
+        role="search"
         class="search"
         v-focus
         v-model="searchQuery"
@@ -40,8 +41,8 @@ export default {
       limit: 30,
       totalPages: 10,
       sortOptions: [
-        { value: "departure_station_name", name: "departure station" },
-        { value: "return_station_name", name: "return station" },
+        { value: "departure_station_name", name: "departure" },
+        { value: "return_station_name", name: "return" },
         { value: "distance", name: "distance" },
         { value: "duration", name: "duration" },
       ],
