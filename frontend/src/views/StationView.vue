@@ -57,6 +57,8 @@ export default {
       attribution:
         'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
     }).addTo(this.map);
+
+    window.map = this.map;
   },
 };
 </script>

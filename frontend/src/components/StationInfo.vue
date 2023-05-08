@@ -1,29 +1,27 @@
 <template>
   <div class="station__info">
-    <h2 class="station__header">{{ station.name }}</h2>
-    <p class="station_text">
+    <h2 role="name" class="station__header">{{ station.name }}</h2>
+    <p role="address" class="station-text">
       Address:<span>{{ station.address }}</span>
     </p>
-    <p class="station_text">
+    <p class="station-text" role="capacity">
       Capacity:<span>{{ station.capacity }}</span>
     </p>
-    <ul class="station_text">
+    <ul class="station-text">
       Total number of journeys
-      <li>
+      <li role="total_trips_start">
         starting from the station:<span>{{ station.total_start }}</span>
       </li>
-      <li>
+      <li role="total_trips_end">
         ending at the station:<span>{{ station.total_end }}</span>
       </li>
     </ul>
-    <ul class="station_text">
+    <ul class="station-text">
       The average distance of a journey
-      <li>
-        starting from the station:<span
-          >{{ formattedAvgStart }} km</span
-        >
+      <li role="average_distance_start">
+        starting from the station:<span>{{ formattedAvgStart }} km</span>
       </li>
-      <li>
+      <li role="average_distance_end">
         ending at the station:<span>{{ formattedAvgEnd }} km</span>
       </li>
     </ul>
@@ -45,7 +43,7 @@ export default {
     formattedAvgEnd() {
       return (this.station.avg_distance_end / 1000).toFixed(2);
     },
-  }
+  },
 };
 </script>
 <style scoped>
@@ -65,15 +63,15 @@ export default {
   margin-bottom: 20px;
   text-align: center;
 }
-.station_text {
+.station-text {
   margin-top: 12px;
 }
 
-.station_text span {
+.station-text span {
   margin-left: 10px;
 }
 
-.station_text li {
+.station-text li {
   margin-top: 8px;
   margin-left: 40px;
   list-style-type: circle;
@@ -97,9 +95,9 @@ export default {
     font-size: 14px;
   }
 
-  .station_text {
-  margin-top: 8px;
-}
+  .station-text {
+    margin-top: 8px;
+  }
 
   .station__location {
     width: 300px;
