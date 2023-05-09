@@ -1,6 +1,4 @@
 /vendor/
-data/trips-2021-05.csv
-data/trips-2021-06.csv
-data/trips-2021-07.csv
-data/stations.csv
+data/stations
+data/trips
 .vscode

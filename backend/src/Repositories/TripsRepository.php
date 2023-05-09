@@ -5,7 +5,6 @@ namespace Grimarina\CityBike\Repositories;
 use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
-use Grimarina\CityBike\Entities\Trip;
 use Grimarina\CityBike\Exceptions\{InvalidArgumentException, TripNotFoundException};
 
 class TripsRepository

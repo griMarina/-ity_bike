@@ -12,6 +12,7 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/config/config.php';
 
 $request = new Request($_GET, $_SERVER, file_get_contents('php://input'),);
 
@@ -30,7 +31,7 @@ try {
 }
 
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=hel_city_bike;charset=utf8', 'admin', 'asennus');
+    $pdo = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8', DB_USER, DB_PASS);
 } catch (PDOException $e) {
     throw new RuntimeException('Failed to connect to database: ' . $e->getMessage());
 }
@@ -40,10 +41,6 @@ $routes = [
         '/stations/show' => new FindAllStations(new StationsRepository($pdo)),
         '/station/show' => new FindStationById(new StationsRepository($pdo)),
         '/trips/show' => new FindAllTrips(new TripsRepository($pdo)),
-    ],
-    'POST' => [
-        '/stations/import' => new ImportStations(__DIR__ . '/data/stations.csv', new StationsRepository($pdo)),
-        '/trips/import' => new ImportTrips(__DIR__ . '/data/trips-2021-07.csv', new TripsRepository($pdo))
     ]
 ];
 
