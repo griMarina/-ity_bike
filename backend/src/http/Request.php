@@ -8,8 +8,8 @@ use Grimarina\CityBike\Exceptions\HttpException;
 class Request
 {
     public function __construct(
-        private array $get, // $_GET
-        private array $server, // $_SERVER
+        private array $get,
+        private array $server,
         private string $body,
     ) {
     }

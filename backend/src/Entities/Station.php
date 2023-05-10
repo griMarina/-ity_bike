@@ -49,9 +49,4 @@ class Station
     {
         return $this->coordinate_y;
     }
-
-    public function __toString(): string
-    {
-        return $this->name_fi . ' ' . $this->address_fi . PHP_EOL;
-    }
 }

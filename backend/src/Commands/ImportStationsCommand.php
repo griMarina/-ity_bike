@@ -46,13 +46,31 @@ class ImportStationsCommand extends Command
         try {
             $csv = Reader::createFromPath($filePath);
             $csv->setHeaderOffset(0);
-            $this->stationsRepository->importCsv($csv);
+
+            $start = microtime(true);
+
+            $rows = $this->stationsRepository->importCsv($csv);
+
+            $end = microtime(true);
+            $time = (int) round($end - $start);
         } catch (ImportException $e) {
             $output->writeln($e->getMessage());
             return Command::FAILURE;
         }
 
-        $output->writeln('Stations imported successfully.');
+        $output->writeln("Imported {$rows} stations in {$this->formatTime($time)}.");
         return Command::SUCCESS;
+    }
+
+    protected function formatTime(int $seconds): string
+    {
+        $minutes = floor($seconds / 60);
+        $seconds = $seconds % 60;
+        $output = '';
+        if ($minutes > 0) {
+            $output .= $minutes . ' min ';
+        }
+        $output .= $seconds . ' sec';
+        return $output;
     }
 }

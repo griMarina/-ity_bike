@@ -5,7 +5,6 @@ namespace Grimarina\CityBike\Repositories;
 use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
-use Grimarina\CityBike\Exceptions\{InvalidArgumentException, TripNotFoundException};
 
 class TripsRepository
 {
@@ -36,7 +35,7 @@ class TripsRepository
         return  $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function importCsv(Reader $csv): void
+    public function importCsv(Reader $csv): int
     {
         ini_set('max_execution_time', 300);
 
@@ -44,6 +43,7 @@ class TripsRepository
 
         $batchSize = 5000; // number of rows to insert in each batch
         $batch = [];
+        $count = 0;
 
         $stmt = $this->pdo->prepare("INSERT IGNORE INTO trips (departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration) VALUES (:departure, :return, :departure_station_id, :departure_station_name, :return_station_id, :return_station_name, :distance, :duration)");
 
@@ -60,23 +60,30 @@ class TripsRepository
             ];
 
             if (count($batch) === $batchSize) {
-                $this->executeBatch($stmt, $batch);
+                $rows = $this->executeBatch($stmt, $batch);
+                $count += $rows;
                 $batch = [];
             }
         }
 
         if (count($batch) > 0) {
-            $this->executeBatch($stmt, $batch);
+            $rows = $this->executeBatch($stmt, $batch);
+            $count += $rows;
         }
+
+        return $count;
     }
 
-    private function executeBatch(\PDOStatement $stmt, array $batch): void
+    private function executeBatch(\PDOStatement $stmt, array $batch): int
     {
+        $count = 0;
         $this->pdo->beginTransaction();
         foreach ($batch as $row) {
             $stmt->execute($row);
+            $count += $stmt->rowCount();
         }
         $this->pdo->commit();
+        return $count;
     }
 
     private function validateCsv(Reader $csv): ResultSet

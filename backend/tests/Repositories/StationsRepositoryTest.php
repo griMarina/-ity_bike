@@ -38,11 +38,9 @@ class StationsRepositoryTest extends TestCase
 
         fclose($csvFile);
 
-        // Load temp file into a League\Csv\Reader object
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Set up expectations for the mock PDOStatement object
         $this->statementMock
             ->expects($this->once())
             ->method('execute')
@@ -63,7 +61,6 @@ class StationsRepositoryTest extends TestCase
 
         $this->connectionStub->method('prepare')->willReturn($this->statementMock);
 
-        // Call the importCsv method with the Reader object
         $this->stationRepository->importCsv($csv);
     }
 
@@ -87,7 +84,6 @@ class StationsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Expect an exception to be thrown when the importCsv() method is called
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File contains invalid data.');
 
@@ -147,19 +143,16 @@ class StationsRepositoryTest extends TestCase
 
     public function testGetByIdReturnsStationObjectIfFound(): void
     {
-        // Define the return value of the mock PDOStatement's execute method
         $this->statementMock->expects($this->once())
             ->method('execute')
             ->with([':id' => 1])
             ->willReturn(true);
 
-        // Define the return value of the mock PDOStatement's fetchAll method
         $this->statementMock->expects($this->once())
             ->method('fetchAll')
             ->with(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Station::class)
             ->willReturn([new Station()]);
 
-        // Configure the mock PDO object to return the mock PDOStatement object when prepare is called
         $this->connectionStub->expects($this->once())
             ->method('prepare')
             ->with("SELECT stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y
@@ -168,10 +161,8 @@ class StationsRepositoryTest extends TestCase
         GROUP BY stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y;")
             ->willReturn($this->statementMock);
 
-        // Call the getById method with an ID of 1
         $result = $this->stationRepository->getById(1);
 
-        // Assert that the result is an instance of Station
         $this->assertInstanceOf(Station::class, $result);
     }
 

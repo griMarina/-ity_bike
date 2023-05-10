@@ -2,8 +2,8 @@
 
 use Grimarina\CityBike\http\{Request, ErrorResponse};
 use Grimarina\CityBike\Exceptions\HttpException;
-use Grimarina\CityBike\Actions\Stations\{ImportStations, FindAllStations, FindStationById};
-use Grimarina\CityBike\Actions\Trips\{ImportTrips, FindAllTrips};
+use Grimarina\CityBike\Actions\Stations\{FindAllStations, FindStationById};
+use Grimarina\CityBike\Actions\Trips\{FindAllTrips};
 use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
 
 // Set CORS headers

@@ -36,11 +36,9 @@ class TripsRepositoryTest extends TestCase
 
         fclose($csvFile);
 
-        // Load the CSV file into a League\Csv\Reader object
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Set up expectations for the mock PDOStatement object
         $this->statementMock
             ->expects($this->once())
             ->method('execute')
@@ -58,7 +56,6 @@ class TripsRepositoryTest extends TestCase
             );
         $this->connectionStub->method('prepare')->willReturn($this->statementMock);
 
-        // Call the importCsv method with the Reader object
         $this->tripsRepository->importCsv($csv);
     }
 
@@ -112,7 +109,6 @@ class TripsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
         $reflection = new \ReflectionClass($this->tripsRepository);
         $method = $reflection->getMethod('validateCsv');
         $method->setAccessible(true);
@@ -142,7 +138,6 @@ class TripsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
         $reflection = new \ReflectionClass($this->tripsRepository);
         $method = $reflection->getMethod('validateCsv');
         $method->setAccessible(true);
@@ -175,7 +170,6 @@ class TripsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
         $reflection = new \ReflectionClass($this->tripsRepository);
         $method = $reflection->getMethod('validateCsv');
         $method->setAccessible(true);
@@ -206,7 +200,6 @@ class TripsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
         $reflection = new \ReflectionClass($this->tripsRepository);
         $method = $reflection->getMethod('validateCsv');
         $method->setAccessible(true);

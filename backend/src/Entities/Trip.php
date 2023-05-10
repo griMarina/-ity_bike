@@ -62,9 +62,4 @@ class Trip
     {
         return $this->duration;
     }
-
-    public function __toString(): string
-    {
-        return $this->departure_station_name . '>>>' . $this->return_station_name . PHP_EOL;
-    }
 }

@@ -53,7 +53,8 @@ class ImportTripsCommandTest extends TestCase
     {
         $this->tripsRepository->expects($this->once())
             ->method('importCsv')
-            ->with($this->isInstanceOf(Reader::class));
+            ->with($this->isInstanceOf(Reader::class))
+            ->willReturn(10);
 
         $input = new ArrayInput([
             'file' => '2021-05.csv',
@@ -63,6 +64,6 @@ class ImportTripsCommandTest extends TestCase
         $result = $this->command->run($input, $output);
 
         $this->assertEquals(Command::SUCCESS, $result);
-        $this->assertStringContainsString('Trips imported successfully', $output->fetch());
+        $this->assertStringContainsString('Imported 10 trips in 0 sec', $output->fetch());
     }
 }

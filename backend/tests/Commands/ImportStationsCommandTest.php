@@ -53,7 +53,8 @@ class ImportStationsCommandTest extends TestCase
     {
         $this->stationsRepository->expects($this->once())
             ->method('importCsv')
-            ->with($this->isInstanceOf(Reader::class));
+            ->with($this->isInstanceOf(Reader::class))
+            ->willReturn(10);
 
         $input = new ArrayInput([
             'file' => 'stations.csv',
@@ -63,6 +64,6 @@ class ImportStationsCommandTest extends TestCase
         $result = $this->command->run($input, $output);
 
         $this->assertEquals(Command::SUCCESS, $result);
-        $this->assertStringContainsString('Stations imported successfully', $output->fetch());
+        $this->assertStringContainsString('Imported 10 stations in 0 sec.', $output->fetch());
     }
 }

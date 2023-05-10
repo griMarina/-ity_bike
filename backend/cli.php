@@ -1,10 +1,8 @@
 <?php
 
 use Symfony\Component\Console\Application;
-use Grimarina\CityBike\Repositories\StationsRepository;
-use Grimarina\CityBike\Repositories\TripsRepository;
-use Grimarina\CityBike\Commands\ImportStationsCommand;
-use Grimarina\CityBike\Commands\ImportTripsCommand;
+use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
+use Grimarina\CityBike\Commands\{ImportStationsCommand, ImportTripsCommand};
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/config/config.php';
