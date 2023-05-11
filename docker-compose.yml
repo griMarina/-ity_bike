@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.apache
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: hel_city_bike
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: asennus
+
+  db:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1111
+      MYSQL_DATABASE: hel_city_bike
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: asennus
+
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "3000:3000"
