@@ -3,7 +3,6 @@ FROM mysql:5.7
 # Copy the SQL dump to the container
 COPY schema.sql /docker-entrypoint-initdb.d/
 
-# Create a new database and import the SQL dump
 ENV MYSQL_DATABASE hel_city_bike
 ENV MYSQL_USER admin
 ENV MYSQL_PASSWORD asennus

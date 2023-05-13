@@ -57,7 +57,7 @@ class ImportTripsCommandTest extends TestCase
             ->willReturn(10);
 
         $input = new ArrayInput([
-            'file' => '2021-05.csv',
+            'file' => 'trips-1.csv',
         ]);
         $output = new BufferedOutput();
 

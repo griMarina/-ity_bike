@@ -22,8 +22,3 @@ services:
       MYSQL_DATABASE: hel_city_bike
       MYSQL_USER: admin
       MYSQL_PASSWORD: asennus
-
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #     - "3000:3000"
