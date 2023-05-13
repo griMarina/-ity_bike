@@ -28,7 +28,7 @@
 <script>
 import StationTable from "@/components/StationTable.vue";
 import Pagination from "@/components/Pagination.vue";
-import axios from "axios";
+import api from "@/services/api.js";
 export default {
   components: {
     StationTable,
@@ -58,15 +58,12 @@ export default {
     async fetchStations() {
       try {
         this.isLoading = true;
-        const response = await axios.get(
-          "http://localhost:8888/stations/show",
-          {
-            params: {
-              page: this.page,
-              limit: this.limit,
-            },
-          }
-        );
+        const response = await api.get("stations/show", {
+          params: {
+            page: this.page,
+            limit: this.limit,
+          },
+        });
         this.totalPages = Math.ceil(response.data.data.entries / this.limit);
         this.stations = response.data.data.stations;
       } catch (error) {

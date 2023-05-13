@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import L from "leaflet";
-import StationInfo from "../components/StationInfo.vue";
-import NoResults from "../components/UI/NoResults.vue";
+import StationInfo from "@/components/StationInfo.vue";
+import NoResults from "@/components/UI/NoResults.vue";
+import api from "@/services/api.js";
 export default {
   components: {
     StationInfo,
@@ -32,7 +32,7 @@ export default {
     async fetchStationInfo() {
       this.isLoading = true;
       try {
-        const response = await axios.get("http://localhost:8888/station/show", {
+        const response = await api.get("station/show", {
           params: {
             id: this.$route.params.id,
           },

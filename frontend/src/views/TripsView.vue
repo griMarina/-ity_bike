@@ -25,7 +25,7 @@
 <script>
 import TripTable from "@/components/TripTable.vue";
 import Pagination from "@/components/Pagination.vue";
-import axios from "axios";
+import api from "@/services/api.js";
 export default {
   components: {
     TripTable,
@@ -55,7 +55,7 @@ export default {
     async fetchTrips() {
       try {
         this.isLoading = true;
-        const response = await axios.get("http://localhost:8888/trips/show", {
+        const response = await api.get("trips/show", {
           params: {
             page: this.page,
             limit: this.limit,

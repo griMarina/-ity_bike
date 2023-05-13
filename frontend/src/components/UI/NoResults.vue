@@ -1,6 +1,6 @@
 <template>
   <div class="no-results" role="status">
-    <img src="/public/no-results.png" alt="no results" />
+    <img src="/no-results.png" alt="no results" />
     <p><slot></slot></p>
   </div>
 </template>
