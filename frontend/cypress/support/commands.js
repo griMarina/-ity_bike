@@ -13,6 +13,8 @@
 Cypress.Commands.add("sortByString", (option) => {
   cy.get("[role=select]").select(option);
 
+  cy.wait(1000);
+
   cy.get(`[role=${option}]`).then((items) => {
     const itemKeys = items.toArray().map((el) => el.textContent);
     const sortedKeys = itemKeys.sort((a, b) => a.localeCompare(b));
@@ -24,6 +26,8 @@ Cypress.Commands.add("sortByString", (option) => {
 Cypress.Commands.add("sortByNum", (option) => {
   cy.get("[role=select]").select(option);
 
+  cy.wait(1000);
+
   cy.get(`[role=${option}]`).then((items) => {
     const itemKeys = items.toArray().map((el) => parseInt(el.textContent));
     const sortedKeys = [...items]
@@ -32,7 +36,7 @@ Cypress.Commands.add("sortByNum", (option) => {
 
     expect(itemKeys).to.deep.equal(sortedKeys);
   });
-}); //
+});
 //
 // -- This is a child command --
 // Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })

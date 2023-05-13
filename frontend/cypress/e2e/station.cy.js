@@ -1,6 +1,6 @@
 describe("Station page view", () => {
   function getStationInfo() {
-    cy.intercept("GET", "http://localhost:8888/station/show?id=1", {
+    cy.intercept("GET", "http://localhost:8080/station/show?id=1", {
       fixture: "station.json",
     }).as("getStationInfo");
 
