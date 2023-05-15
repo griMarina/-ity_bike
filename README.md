@@ -19,7 +19,7 @@ This web application displays information about bicycle stations and journeys ma
     ·
     <a href="#features">Features</a>
     ·
-    <a href="screenshots">Screenshots</a>
+    <a href="#screenshots">Screenshots</a>
   </p>
 
 ## Getting Started
@@ -97,7 +97,7 @@ Please be patient as the data import process may take some time. Importing trip 
 
 ## Screenshots
 
-### Stations List View
+### Station List View
 
 ![Stations List View](media/stations.png)
 
