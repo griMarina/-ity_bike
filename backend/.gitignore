@@ -1,4 +1,3 @@
 /vendor/
-data/stations
-data/trips
+data
 .vscode

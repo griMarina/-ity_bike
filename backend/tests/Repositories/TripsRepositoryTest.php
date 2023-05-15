@@ -27,18 +27,22 @@ class TripsRepositoryTest extends TestCase
             ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100']
         ];
 
+        // Generate a temporary file path for the CSV file
         $csvFilePath = tempnam(sys_get_temp_dir(), 'csv');
         $csvFile = fopen($csvFilePath, 'w');
 
+        // Write the CSV data rows to the file
         foreach ($csvData as $row) {
             fputcsv($csvFile, $row);
         }
 
         fclose($csvFile);
 
+        // Create a CSV reader from the file path
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
+        // Expect the 'execute' method of the PDO statement to be called once with the expected data
         $this->statementMock
             ->expects($this->once())
             ->method('execute')
@@ -54,13 +58,17 @@ class TripsRepositoryTest extends TestCase
                     ':duration' => 100,
                 ],
             );
+
+        // Set up the connection stub to return the statement mock
         $this->connectionStub->method('prepare')->willReturn($this->statementMock);
 
+        // Call the importCsv method with the CSV reader
         $this->tripsRepository->importCsv($csv);
     }
 
     public function testTripDurationIsLessThanTenSec(): void
     {
+        // Create a CSV file with data including a trip with duration less than 10sec
         $csvData = [
             ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
             ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'],
@@ -79,7 +87,6 @@ class TripsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
-        // Create a reflection to make the private method validateCsv() accessible and check the ResultSet
         $reflection = new \ReflectionClass($this->tripsRepository);
         $method = $reflection->getMethod('validateCsv');
         $method->setAccessible(true);
@@ -91,6 +98,7 @@ class TripsRepositoryTest extends TestCase
 
     public function testTripDistanceIsLessThanTenMetres(): void
     {
+        // Create a CSV file with data including a trip with distance less than 10m
         $csvData = [
             ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
             ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'],
@@ -118,8 +126,9 @@ class TripsRepositoryTest extends TestCase
         $this->assertCount(1, $resultSet);
     }
 
-    public function testArrivalHappensBeforeDeparture(): void
+    public function testReturnHappensBeforeDeparture(): void
     {
+        // Create a CSV file with data including a trip with invalid return time
         $csvData = [
             ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
             ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'],
@@ -149,6 +158,7 @@ class TripsRepositoryTest extends TestCase
 
     public function testInvalidIntegers(): void
     {
+        // Create a CSV file with invalid data 
         $csvData = [
             ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
             ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'], // valid row
@@ -181,6 +191,7 @@ class TripsRepositoryTest extends TestCase
 
     public function testArrivalAndDepartureAreNotParseable(): void
     {
+        // Create a CSV file with data including a trip with invalid departure and return time
         $csvData = [
             ['Departure', 'Return', 'Departure station id', 'Departure station name', 'Return station id', 'Return station name', 'Covered distance (m)', 'Duration (sec.)'],
             ['2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station A', '2', 'Station B', '1000', '100'],
@@ -211,6 +222,7 @@ class TripsRepositoryTest extends TestCase
 
     public function testGetAllReturnsExpectedData(): void
     {
+        // Define the expected trips data
         $expected = [
             [
                 'id' => 1,
@@ -236,6 +248,7 @@ class TripsRepositoryTest extends TestCase
             ],
         ];
 
+        // Set the expectation for the execute method on the statement mock
         $this->statementMock->expects($this->atLeastOnce())
             ->method('bindValue')
             ->withConsecutive(
@@ -252,14 +265,17 @@ class TripsRepositoryTest extends TestCase
             ->with($this->equalTo(\PDO::FETCH_ASSOC))
             ->willReturn($expected);
 
+        // Set up the stubbed prepare method on the connection stub to return the statement mocks
         $this->connectionStub
             ->expects($this->once())
             ->method('prepare')
             ->with("SELECT id, departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration FROM `trips` LIMIT :offset, :limit;")
             ->willReturn($this->statementMock);
 
+        // Execute the method and get the result
         $result = $this->tripsRepository->getAll(1, 20);
 
+        // Assert the result
         $this->assertEquals($expected, $result);
     }
 }

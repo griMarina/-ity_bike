@@ -18,7 +18,11 @@ $tripsRepository = new TripsRepository($pdo);
 
 $application = new Application();
 
+// Add the command for stations import to the console application
 $application->add(new ImportStationsCommand($stationsRepository));
+
+// Add the command for trips import to the console application
 $application->add(new ImportTripsCommand($tripsRepository));
 
+// Run the console application
 $application->run();

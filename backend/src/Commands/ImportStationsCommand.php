@@ -31,27 +31,36 @@ class ImportStationsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // Get the file path from the command line arguments
         $filePath =  STATIONS_DIR . $input->getArgument('file');
 
+        // Check the file extension
         if (pathinfo($filePath, PATHINFO_EXTENSION) !== 'csv') {
             $output->writeln('Invalid file extension. Only CSV files are allowed.');
             return Command::FAILURE;
         }
 
+        // Check if the file exists
         if (!file_exists($filePath)) {
             $output->writeln('File not found. Please enter a valid file name.');
             return Command::FAILURE;
         }
 
         try {
+            // Create a CSV reader and set the header offset
             $csv = Reader::createFromPath($filePath);
             $csv->setHeaderOffset(0);
 
+            // Record the start time before importing data
             $start = microtime(true);
 
+            // Import the CSV data into the database
             $rows = $this->stationsRepository->importCsv($csv);
 
+            // Record the end time after importing data
             $end = microtime(true);
+
+            // Calculate the time spent importing data
             $time = (int) round($end - $start);
         } catch (ImportException $e) {
             $output->writeln($e->getMessage());
@@ -64,6 +73,7 @@ class ImportStationsCommand extends Command
 
     protected function formatTime(int $seconds): string
     {
+        // Format the time in minutes and seconds
         $minutes = floor($seconds / 60);
         $seconds = $seconds % 60;
         $output = '';

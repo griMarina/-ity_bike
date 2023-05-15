@@ -15,17 +15,20 @@ class FindAllTripsTest extends TestCase
 
     protected function setUp(): void
     {
+        // Create a mock instance of TripsRepository and Request for testing
         $this->tripsRepository = $this->createMock(TripsRepository::class);
         $this->mockRequest = $this->createMock(Request::class);
     }
 
     public function testItReturnsSuccessfulResponseWithStatus200(): void
     {
+        // Define the expected trips data
         $trips = [
             [1, '2021-05-01T00:00:11', '2021-05-01T00:04:34', '2', 'Station A', '1', 'Station B', 1000, 100],
             [2, '2021-05-01T00:00:11', '2021-05-01T00:04:34', '1', 'Station B', '2', 'Station A', 2000, 200],
         ];
 
+        // Set up the expectations for the mock methods
         $this->tripsRepository
             ->expects($this->once())
             ->method('getEntries')
@@ -46,8 +49,11 @@ class FindAllTripsTest extends TestCase
             ]);
 
         $action = new FindAllTrips($this->tripsRepository);
+
+        // Execute the action and get the response
         $response = $action->handle($this->mockRequest);
 
+        // Assert the response type, status, and payload values
         $this->assertInstanceOf(SuccessfulResponse::class, $response);
         $this->assertEquals(200, $response->status());
         $this->assertEquals($trips, $response->payload()['data']['trips']);
@@ -56,6 +62,7 @@ class FindAllTripsTest extends TestCase
 
     public function testItReturnsErrorResponseWithStatus404IfTripsNotFound(): void
     {
+        // Set up the expectations for the mock methods
         $this->mockRequest
             ->expects($this->exactly(2))
             ->method('query')
@@ -79,8 +86,11 @@ class FindAllTripsTest extends TestCase
             ]);
 
         $action = new FindAllTrips($this->tripsRepository);
+
+        // Execute the action and get the response
         $response = $action->handle($this->mockRequest);
 
+        // Assert the response type, status, and payload values
         $this->assertInstanceOf(ErrorResponse::class, $response);
         $this->assertEquals(404, $response->status());
         $this->assertEquals('Trips not found.', $response->payload()['reason']);
@@ -88,6 +98,7 @@ class FindAllTripsTest extends TestCase
 
     public function testItReturnsErrorResponseWithStatus400IfParamsInvalid(): void
     {
+        // Set up the expectations for the mock methods
         $this->mockRequest
             ->expects($this->exactly(2))
             ->method('query')
@@ -97,8 +108,11 @@ class FindAllTripsTest extends TestCase
             ]);
 
         $action = new FindAllTrips($this->tripsRepository);
+
+        // Execute the action and get the response
         $response = $action->handle($this->mockRequest);
 
+        // Assert the response type, status, and payload values
         $this->assertInstanceOf(ErrorResponse::class, $response);
         $this->assertEquals(400, $response->status());
         $this->assertEquals('Invalid parameters.', $response->payload()['reason']);

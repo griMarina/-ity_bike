@@ -36,6 +36,7 @@ try {
     throw new RuntimeException('Failed to connect to database: ' . $e->getMessage());
 }
 
+// Define the available routes and corresponding actions
 $routes = [
     'GET' => [
         '/stations/show' => new FindAllStations(new StationsRepository($pdo)),
@@ -44,19 +45,23 @@ $routes = [
     ]
 ];
 
+// Check if the requested method is supported
 if (!array_key_exists($method, $routes)) {
     (new ErrorResponse('Not found'))->send();
     return;
 }
 
+// Check if the requested path is valid
 if (!array_key_exists($path, $routes[$method])) {
     (new ErrorResponse('Not found'))->send();
     return;
 }
 
+// Get the action associated with the requested route
 $action = $routes[$method][$path];
 
 try {
+    // Handle the request using the specified action
     $response = $action->handle($request);
 } catch (Exception $e) {
     (new ErrorResponse($e->getMessage()))->send();

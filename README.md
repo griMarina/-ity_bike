@@ -33,9 +33,9 @@ This web application displays information about bicycle stations and journeys ma
 
 ### Running the backend
 
-1. Clone the repository: [`git clone https://github.com/griMarina/City-bike.git`](https://github.com/griMarina/City-bike.git)
+1. Clone the repository: `git clone https://github.com/griMarina/city-bike.git`
 2. Navigate to the project directory: `cd city-bike`
-3. Build and start the backend using docker-compose: `docker-compose up -d`
+3. Build and start the backend using docker-compose: `docker compose up -d`
 4. The server runs at `http://localhost:8080`
 
 ### Running the frontend
@@ -43,13 +43,13 @@ This web application displays information about bicycle stations and journeys ma
 1. Navigate to the project directory: `cd city-bike/frontend`
 2. Install the required packages: `npm install`
 3. Run the development server: `npm run dev`
-4. Access the application in your web browser at `http://localhost:3000`
+4. Access the application in your web browser at `http://127.0.0.1:3000`
 
 ### Data import
 
 1. Make sure that the backend is running in a docker container
-2. Open the CLI in the backend directory in the docker container: `docker exec -it city-bike-backend-1 /bin/bash`
-3. To import data with stations to the database, run the command: `php cli.php stations:import stations.csv`
+2. Open the CLI in the docker container: `docker exec -it city-bike-backend-1 /bin/bash`
+3. To import data with stations, run the command: `php cli.php stations:import stations.csv`
 4. To import data with trips from the first file (`trips-1.csv`), run the command:: `php cli.php trips:import trips-1.csv`
 5. To import data with trips from the second file (`trips-2.csv`), run the command:: `php cli.php trips:import trips-2.csv`
 6. To import data with trips from the third file (`trips-3.csv`), run the command:: `php cli.php trips:import trips-3.csv`
@@ -60,7 +60,7 @@ Please be patient as the data import process may take some time. Importing trip 
 
 #### Frontend (Cypress)
 
-1. Make sure that the app is running at `http://localhost:3000`
+1. Make sure that the app is running at `http://127.0.0.1:3000`
 2. Navigate to the frontend directory: `cd city-bike/frontend`
 3. Run `npm run test` to run the Cypress tests
 

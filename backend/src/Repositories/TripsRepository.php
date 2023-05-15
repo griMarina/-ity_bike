@@ -39,6 +39,7 @@ class TripsRepository
     {
         ini_set('max_execution_time', 300);
 
+        // Validate the CSV file and get a filtered result set
         $validCsv = $this->validateCsv($csv);
 
         $batchSize = 5000; // number of rows to insert in each batch
@@ -48,6 +49,7 @@ class TripsRepository
         $stmt = $this->pdo->prepare("INSERT IGNORE INTO trips (departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration) VALUES (:departure, :return, :departure_station_id, :departure_station_name, :return_station_id, :return_station_name, :distance, :duration)");
 
         foreach ($validCsv as $row) {
+            // Add the current row data to the batch array
             $batch[] = [
                 ':departure' => $row['Departure'],
                 ':return' => $row['Return'],
@@ -59,6 +61,7 @@ class TripsRepository
                 ':duration' => (int) $row['Duration (sec.)']
             ];
 
+            // If the batch size is reached, execute the batch
             if (count($batch) === $batchSize) {
                 $rows = $this->executeBatch($stmt, $batch);
                 $count += $rows;
@@ -66,11 +69,13 @@ class TripsRepository
             }
         }
 
+        // Execute the remaining rows in the batch (if any)
         if (count($batch) > 0) {
             $rows = $this->executeBatch($stmt, $batch);
             $count += $rows;
         }
 
+        // Return the total count of imported trips
         return $count;
     }
 
@@ -88,35 +93,46 @@ class TripsRepository
 
     private function validateCsv(Reader $csv): ResultSet
     {
+        // Create a statement object for filtering and validating rows
         $statement = (new Statement())
             ->where(function (array $row) {
 
+                // Convert the 'Departure' and 'Return' values to DateTime objects
                 $departure = \DateTime::createFromFormat('Y-m-d\TH:i:s', $row['Departure']);
                 $return = \DateTime::createFromFormat('Y-m-d\TH:i:s', $row['Return']);
 
+                // Check if the date parsing failed for either 'Departure' or 'Return'
                 if ($departure === false || $return === false) {
                     return false;
                 }
 
+                // Check if 'Return' is earlier than 'Departure'
                 if ($return < $departure) {
                     return false;
                 }
 
+                // Check if the required fields are numeric
                 if (!ctype_digit($row['Departure station id']) || !ctype_digit($row['Return station id']) || !ctype_digit($row['Duration (sec.)']) || !ctype_digit($row['Covered distance (m)'])) {
                     return false;
                 }
 
+                // Convert the required fields to integers
                 $duration = (int) $row['Duration (sec.)'];
                 $distance = (int) $row['Covered distance (m)'];
 
+                // Check if the duration or distance is below the minimum threshold
                 if ($duration < 10 || $distance < 10) {
                     return false;
                 }
 
+                // Return the row if it passes all validations
                 return $row;
             });
 
+        // Process the CSV file using the statement to filter and validate rows
         $validCsv = $statement->process($csv);
+
+        // Return the filtered and validated result set
         return $validCsv;
     }
 }

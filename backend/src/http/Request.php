@@ -14,6 +14,7 @@ class Request
     ) {
     }
 
+    // Get the request method (e.g., GET, POST)
     public function method(): string
     {
         if (!array_key_exists('REQUEST_METHOD', $this->server)) {
@@ -24,6 +25,7 @@ class Request
     }
 
 
+    // Method for parsing the JSON body of the request
     public function jsonBody(): array
     {
         try {
@@ -43,6 +45,7 @@ class Request
         return $data;
     }
 
+    // Get a specific field from the JSON body
     public function jsonBodyField(string $field): mixed
     {
         $data = $this->jsonBody();
@@ -57,7 +60,7 @@ class Request
         return $data[$field];
     }
 
-    // Method for getting the request path
+    // Get the request path
     public function path(): string
     {
         if (!array_key_exists('REQUEST_URI', $this->server)) {
@@ -73,7 +76,7 @@ class Request
         return $components['path'];
     }
 
-    // Method for getting the value of a specific query string parameter
+    // Get the value of a specific query string parameter
     public function query(string $param): string
     {
         if (!array_key_exists($param, $this->get)) {
@@ -85,7 +88,7 @@ class Request
         return $value;
     }
 
-    // Method for getting the value of a specific header
+    // Get the value of a specific header
     public function header(string $header): string
     {
         $headerName = mb_strtoupper('http_' . str_replace('-', '_', $header));

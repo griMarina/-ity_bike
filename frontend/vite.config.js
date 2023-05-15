@@ -7,6 +7,7 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   server: {
     port: 3000,
+    baseUrl: "http://127.0.0.1",
   },
   plugins: [vue()],
   resolve: {

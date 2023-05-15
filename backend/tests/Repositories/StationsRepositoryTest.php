@@ -16,6 +16,7 @@ class StationsRepositoryTest extends TestCase
 
     public function setUp(): void
     {
+        // Create stubs and mocks, and instantiate the StationsRepository
         $this->connectionStub = $this->createStub(\PDO::class);
         $this->statementMock = $this->createMock(\PDOStatement::class);
         $this->stationRepository = new StationsRepository($this->connectionStub);
@@ -41,6 +42,7 @@ class StationsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
+        // Set the expectation for the execute method on the statement mock
         $this->statementMock
             ->expects($this->once())
             ->method('execute')
@@ -59,8 +61,10 @@ class StationsRepositoryTest extends TestCase
                 ':coordinate_y' => 20.0000,
             ]);
 
+        // Set the expectation for the execute method on the statement mock
         $this->connectionStub->method('prepare')->willReturn($this->statementMock);
 
+        // Call the method under test
         $this->stationRepository->importCsv($csv);
     }
 
@@ -84,14 +88,17 @@ class StationsRepositoryTest extends TestCase
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setHeaderOffset(0);
 
+        // Set the expectation for the thrown exception
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File contains invalid data.');
 
+        // Call the method under test
         $this->stationRepository->importCsv($csv);
     }
 
     public function testGetAllReturnsExpectedData(): void
     {
+        // Set up the expectations for the query and result data
         $expected = [
             [
                 'id' => 1,
@@ -111,6 +118,7 @@ class StationsRepositoryTest extends TestCase
             ],
         ];
 
+        // Set the expectations for the statement mock
         $this->statementMock->expects($this->atLeastOnce())
             ->method('bindValue')
             ->withConsecutive(
@@ -127,6 +135,7 @@ class StationsRepositoryTest extends TestCase
             ->with($this->equalTo(\PDO::FETCH_ASSOC))
             ->willReturn($expected);
 
+        // Set up the stubbed prepare method on the connection stub to return the statement mock
         $this->connectionStub
             ->expects($this->once())
             ->method('prepare')
@@ -136,13 +145,16 @@ class StationsRepositoryTest extends TestCase
 
         $page = 1;
         $limit = 10;
+        // Call the method under test
         $result = $this->stationRepository->getAll($page, $limit);
 
+        // Assert the result
         $this->assertEquals($expected, $result);
     }
 
     public function testGetByIdReturnsStationObjectIfFound(): void
     {
+        // Set the expectations for the statement mock
         $this->statementMock->expects($this->once())
             ->method('execute')
             ->with([':id' => 1])
@@ -153,6 +165,7 @@ class StationsRepositoryTest extends TestCase
             ->with(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Station::class)
             ->willReturn([new Station()]);
 
+        // Set up the stubbed prepare method on the connection stub to return the statement mocks
         $this->connectionStub->expects($this->once())
             ->method('prepare')
             ->with("SELECT stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y
@@ -161,21 +174,27 @@ class StationsRepositoryTest extends TestCase
         GROUP BY stations.id, stations.name_fi, stations.address_fi, stations.capacity, stations.coordinate_x, stations.coordinate_y;")
             ->willReturn($this->statementMock);
 
+        // Call the method under test
         $result = $this->stationRepository->getById(1);
 
+        // Assert the result
         $this->assertInstanceOf(Station::class, $result);
     }
 
     public function testGetByIdThrowsExceptionIfStationNotFound(): void
     {
+        // Set the expectations for the statement mock
         $this->statementMock->method('execute')->willReturn(null);
         $this->statementMock->method('fetchAll')->willReturn([]);
 
+        // Set up the stubbed prepare method on the connection stub to return the statement mocks
         $this->connectionStub->method('prepare')->willReturn($this->statementMock);
 
+        // Set the expectation for the thrown exception
         $this->expectException(StationNotFoundException::class);
         $this->expectExceptionMessage('Cannot find station: 1.');
 
+        // Call the method under test
         $this->stationRepository->getById(1);
     }
 }

@@ -13,6 +13,7 @@ class StationsRepository
     ) {
     }
 
+    // Get the total number of stations in the database
     public function getEntries(): int
     {
 
@@ -22,6 +23,7 @@ class StationsRepository
         return $stmt->fetch(\PDO::FETCH_COLUMN);
     }
 
+    // Get a paginated list of stations
     public function getAll(int $page, int $limit): array
     {
         $offset = ($page - 1) * $limit;
@@ -78,9 +80,10 @@ class StationsRepository
 
     public function importCsv(Reader $csv): int
     {
+        // Insert rows into the table, ignoring any duplicates
         $stmt = $this->pdo->prepare("INSERT IGNORE INTO stations (id, name_fi, name_sv, name_en, address_fi, address_sv, city_fi, city_sv, operator, capacity, coordinate_x, coordinate_y) VALUES (:id, :name_fi, :name_sv, :name_en, :address_fi, :address_sv, :city_fi, :city_sv, :operator, :capacity, :coordinate_x, :coordinate_y)");
 
-        $count = 0;
+        $count = 0; // number of imported stations
 
         foreach ($csv as $row) {
             try {
@@ -106,6 +109,8 @@ class StationsRepository
                 throw new InvalidArgumentException('File contains invalid data.');
             }
         }
+
+        // Return the total count of imported stations
         return $count;
     }
 }
