@@ -82,6 +82,10 @@ Please be patient as the data import process may take some time. Importing trip 
 - Cypress (for e2e testing)
 - PHPUnit (for backend testing)
 
+I chose PHP and MySQL for the backend of this project because I had previous experience working with them in my past projects. However, I wanted to challenge myself and improve my skills, so I decided to use Vue.js for the frontend, even though I had only a limited experience with it before.
+
+In addition, I took this project as an opportunity to explore new tools and technologies. I experimented with Cypress for end-to-end testing and Docker for containerization, both of which were new to me. This allowed me to gain hands-on experience and broaden my skill set.
+
 ## Features
 
 - Data import from the CSV files to the MySQL database
