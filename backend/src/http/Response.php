@@ -16,7 +16,7 @@ abstract class Response
         header('Content-Type: application/json');
         http_response_code($this->status());
 
-        // Encode the data as JSON and echo it
+        // Encode the data as JSON
         echo json_encode($data, JSON_THROW_ON_ERROR);
     }
 

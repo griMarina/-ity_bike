@@ -49,11 +49,13 @@ export default {
     };
   },
   methods: {
+    // Updates the current page
     changePage(pageNum) {
       this.page = pageNum;
     },
     async fetchTrips() {
       try {
+        // Show loading state
         this.isLoading = true;
         const response = await api.get("trips/show", {
           params: {
@@ -80,14 +82,16 @@ export default {
           this.selectedSort === "duration" ||
           this.selectedSort === "distance"
         ) {
-          return trip1[this.selectedSort] - trip2[this.selectedSort];
+          return trip1[this.selectedSort] - trip2[this.selectedSort]; // Sort trips in ascending order
         }
+        // Sort trips in alphabetical order
         return trip1[this.selectedSort]?.localeCompare(
           trip2[this.selectedSort]
         );
       });
     },
     searchedAndSortedTrips() {
+      // Create a regular expression for case-insensitive search
       const regex = new RegExp(this.searchQuery.trim(), "i");
       return this.sortedTrips.filter((trip) => {
         return (
@@ -98,6 +102,7 @@ export default {
     },
   },
   watch: {
+    // Fetch the trips data when the page changes
     page() {
       this.fetchTrips();
     },

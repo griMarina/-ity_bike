@@ -13,6 +13,7 @@ class TripsRepository
     ) {
     }
 
+    // Get the total number of trips in the database
     public function getEntries(): int
     {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM `trips`;");
@@ -69,7 +70,7 @@ class TripsRepository
             }
         }
 
-        // Execute the remaining rows in the batch (if any)
+        // Execute the remaining rows in the batch
         if (count($batch) > 0) {
             $rows = $this->executeBatch($stmt, $batch);
             $count += $rows;

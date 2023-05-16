@@ -45,7 +45,7 @@ $routes = [
     ]
 ];
 
-// Check if the requested method is supported
+// Check if the requested method exists
 if (!array_key_exists($method, $routes)) {
     (new ErrorResponse('Not found'))->send();
     return;
@@ -61,7 +61,7 @@ if (!array_key_exists($path, $routes[$method])) {
 $action = $routes[$method][$path];
 
 try {
-    // Handle the request using the specified action
+    // Handle the request using the action
     $response = $action->handle($request);
 } catch (Exception $e) {
     (new ErrorResponse($e->getMessage()))->send();

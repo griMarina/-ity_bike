@@ -64,7 +64,7 @@ class StationsRepository
 
     public function getMoreInfoById(int $id): array
     {
-        // Get total number of journeys and the average distance of a journey
+        // Get total number of trips and the average distance of a trip
         $stmt = $this->pdo->prepare("SELECT
         SUM(CASE WHEN departure_station_id = :id THEN 1 ELSE 0 END) AS total_start,
         AVG(CASE WHEN departure_station_id = :id THEN distance ELSE NULL END) AS avg_distance_start,

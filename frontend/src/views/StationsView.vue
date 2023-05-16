@@ -52,19 +52,26 @@ export default {
     };
   },
   methods: {
+    // Updates the current page
     changePage(pageNum) {
       this.page = pageNum;
     },
     async fetchStations() {
       try {
+        // Show loading state
         this.isLoading = true;
+
+        // Send a GET request with parameters to the API to fetch stations
         const response = await api.get("stations/show", {
           params: {
             page: this.page,
             limit: this.limit,
           },
         });
+        // Calculate the total number of pages
         this.totalPages = Math.ceil(response.data.data.entries / this.limit);
+
+        // Update the stations array with the fetched stations data
         this.stations = response.data.data.stations;
       } catch (error) {
         console.log(error);
@@ -74,9 +81,11 @@ export default {
     },
   },
   mounted() {
+    // Fetch stations when the component is mounted
     this.fetchStations();
   },
   computed: {
+    // Computed property to return sorted stations based on selected option
     sortedStations() {
       return [...this.stations].sort((st1, st2) => {
         if (this.selectedSort === "id" || this.selectedSort === "capacity") {
@@ -85,6 +94,7 @@ export default {
         return st1[this.selectedSort]?.localeCompare(st2[this.selectedSort]);
       });
     },
+    // Computed property to return stations that match search query
     searchedAndSortedStations() {
       const regex = new RegExp(this.searchQuery.trim(), "i");
       return this.sortedStations.filter((station) => {
@@ -93,6 +103,7 @@ export default {
     },
   },
   watch: {
+    // Fetch the stations data when the page changes
     page() {
       this.fetchStations();
     },

@@ -1,6 +1,7 @@
 describe("Pagination functionality", () => {
   beforeEach(() => {
     cy.visit("#/stations");
+    cy.wait(1000);
   });
 
   it("shows the first 30 rows on initial page load", () => {
@@ -26,7 +27,8 @@ describe("Pagination functionality", () => {
 
   it("shows the remaining rows on last page when '>>' pagination button is clicked", () => {
     cy.get("[role=button-last]").click();
-    cy.wait(1500);
+    cy.get("[role=button-last]").should("be.disabled");
+    cy.wait(1000);
     cy.get("[role=id]").eq(0).should("contain", "761");
     cy.get("[role=id]").eq(6).should("contain", "902");
   });

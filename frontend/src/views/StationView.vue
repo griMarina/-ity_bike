@@ -23,22 +23,28 @@ export default {
     return {
       station: {},
       isLoading: false,
-      map: null,
-      marker: null,
+      map: null, // Leaflet map instance
+      marker: null, // Leaflet marker instance
       errorMessage: "",
     };
   },
   methods: {
     async fetchStationInfo() {
+      // Show loading state
       this.isLoading = true;
       try {
+        // Fetch station info based on the ID from the route params
         const response = await api.get("station/show", {
           params: {
             id: this.$route.params.id,
           },
         });
+
         this.station = response.data.data;
+
+        // Set the map view to the station's location
         this.map.setView([this.station.y, this.station.x], 13);
+        // Add a marker for the station on the map
         this.marker = L.marker([this.station.y, this.station.x]).addTo(
           this.map
         );
@@ -50,14 +56,17 @@ export default {
     },
   },
   mounted() {
+    // Fetch the station info when the component is mounted
     this.fetchStationInfo();
 
+    // Create a Leaflet map instance and set the initial view
     this.map = L.map("map").setView([0, 0], 13);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-    }).addTo(this.map);
+    }).addTo(this.map); // Add the OpenStreetMap tile layer to the map
 
+    // Assign the map instance to the global window object for debugging
     window.map = this.map;
   },
 };
