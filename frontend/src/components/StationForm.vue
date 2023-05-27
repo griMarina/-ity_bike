@@ -1,66 +1,73 @@
 <template>
-  <div>
-    <form @submit.prevent="createStation">
-      <h4>Station creation</h4>
-      <my-input
-        v-focus
-        v-model="station.name_fi"
-        type="text"
-        placeholder="name (finnish)"
-        required
-      />
-      <my-input
-        v-model="station.name_sv"
-        type="text"
-        placeholder="name (swedish)"
-        required
-      />
-      <my-input
-        v-model="station.name_en"
-        type="text"
-        placeholder="name (english)"
-        required
-      />
-      <my-input
-        v-model="station.address_fi"
-        type="text"
-        placeholder="address (finnish)"
-        required
-      />
-      <my-input
-        v-model="station.address_sv"
-        type="text"
-        placeholder="address (swedish)"
-        required
-      />
-      <my-input
-        v-model="station.city_fi"
-        type="text"
-        placeholder="city fi"
-        required
-      />
-      <my-input
-        v-model="station.city_sv"
-        type="text"
-        placeholder="city se"
-        required
-      />
-      <my-input
-        v-model="station.operator"
-        type="text"
-        placeholder="operator"
-        required
-      />
-      <my-input
-        v-model="station.capacity"
-        type="number"
-        placeholder="capacity"
-        min="0"
-      />
-      <my-button class="btn-add" type="submit">Add station</my-button>
-    </form>
-    <div v-show="error">Invalid address</div>
-  </div>
+  <form @submit.prevent="createStation" class="form">
+    <h3 class="form__header">New station</h3>
+    <my-input
+      class="input"
+      v-focus
+      v-model="station.name_fi"
+      type="text"
+      placeholder="name (finnish)"
+      required
+    />
+    <my-input
+      class="input"
+      v-model="station.name_sv"
+      type="text"
+      placeholder="name (swedish)"
+      required
+    />
+    <my-input
+      class="input"
+      v-model="station.name_en"
+      type="text"
+      placeholder="name (english)"
+      required
+    />
+    <my-input
+      class="input"
+      v-model="station.address_fi"
+      type="text"
+      placeholder="address (finnish)"
+      required
+    />
+    <my-input
+      class="input"
+      v-model="station.address_sv"
+      type="text"
+      placeholder="address (swedish)"
+      required
+    />
+    <my-input
+      class="input"
+      v-model="station.city_fi"
+      type="text"
+      placeholder="city (finnish)"
+      required
+    />
+    <my-input
+      class="input"
+      v-model="station.city_sv"
+      type="text"
+      placeholder="city (swedish)"
+      required
+    />
+    <my-input
+      class="form__input"
+      v-model="station.operator"
+      type="text"
+      placeholder="operator"
+      required
+    />
+    <my-input
+      class="form__input"
+      v-model="station.capacity"
+      type="number"
+      placeholder="capacity"
+      min="0"
+    />
+    <my-button class="btn-add" type="submit">Add station</my-button>
+    <p v-show="error">Invalid address</p>
+  </form>
 </template>
 
 <script>
@@ -129,9 +136,18 @@ export default {
 </script>
 
 <style scoped>
-form {
+.form {
   display: flex;
   flex-direction: column;
+  text-align: center;
+}
+.form__header {
+  margin-bottom: 15px;
+  color: #257bc9;
+  font-size: 20px;
+}
+.input {
+  margin-bottom: 15px;
 }
 
 .btn-add {

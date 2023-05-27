@@ -1,6 +1,7 @@
 <template>
   <div class="dialog" v-if="show" @click.stop="hideDialog">
     <div @click.stop class="dialog__content">
+      <my-button class="btn" @click="hideDialog">X</my-button>
       <slot> </slot>
     </div>
   </div>
@@ -31,7 +32,22 @@ export default {
   background: white;
   border-radius: 12px;
   min-height: 50px;
-  min-width: 300px;
+  width: 400px;
   padding: 20px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  padding: 3px;
+  width: 26px;
+  align-self: flex-end;
+}
+
+@media (max-width: 794px) {
+  .dialog__content {
+    width: 300px;
+  }
 }
 </style>
