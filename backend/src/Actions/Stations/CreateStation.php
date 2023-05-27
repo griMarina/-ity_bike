@@ -29,6 +29,8 @@ class CreateStation implements ActionInterface
                 $request->jsonBodyField('city_sv'),
                 $request->jsonBodyField('operator'),
                 $request->jsonBodyField('capacity'),
+                $request->jsonBodyField('coordinate_x'),
+                $request->jsonBodyField('coordinate_y'),
             );
         } catch (HttpException $error) {
             return new ErrorResponse($error->getMessage());

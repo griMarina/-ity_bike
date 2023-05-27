@@ -10,6 +10,7 @@
         placeholder="Search trip"
       ></my-input>
       <my-select v-model="selectedSort" :options="sortOptions"></my-select>
+      <my-button class="add-btn">New trip</my-button>
     </div>
     <pagination
       :totalPages="totalPages"
@@ -117,6 +118,15 @@ export default {
 .app__btns {
   display: flex;
   justify-content: space-between;
-  margin: 15px 0;
+  margin: 19px 0 15px;
+  font-size: 14px;
+  height: 43px;
+}
+
+@media (max-width: 794px) {
+  .app__btns {
+    font-size: 12px;
+    height: 38px;
+  }
 }
 </style>

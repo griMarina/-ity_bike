@@ -10,10 +10,10 @@
     <ul class="station-text">
       Total number of journeys
       <li role="total_trips_start">
-        starting from the station:<span>{{ station.total_start }}</span>
+        starting from the station:<span>{{ station.total_start ?? 0 }}</span>
       </li>
       <li role="total_trips_end">
-        ending at the station:<span>{{ station.total_end }}</span>
+        ending at the station:<span>{{ station.total_end ?? 0 }}</span>
       </li>
     </ul>
     <ul class="station-text">

@@ -1,5 +1,11 @@
 <template>
-  <input :value="modelValue" @input="updateInput" type="text" class="input" />
+  <input
+    :value="modelValue"
+    @input="updateInput"
+    :required="required"
+    type="text"
+    class="input"
+  />
 </template>
 
 <script>
@@ -7,6 +13,7 @@ export default {
   name: "my-input",
   props: {
     modelValue: [String, Number],
+    required: Boolean,
   },
   methods: {
     updateInput(event) {
@@ -18,16 +25,9 @@ export default {
 
 <style scoped>
 .input {
-  margin-top: 15px;
   padding: 10px 15px;
   border: 2px solid #257bc9;
   border-radius: 5px;
-  font-size: 14px;
-}
-
-@media (max-width: 794px) {
-  .input {
-    font-size: 12px;
-  }
+  font-size: inherit;
 }
 </style>

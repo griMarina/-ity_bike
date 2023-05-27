@@ -10,7 +10,11 @@
         placeholder="Search station by name or address"
       ></my-input>
       <my-select v-model="selectedSort" :options="sortOptions"></my-select>
+      <my-button @click="showDialog">New station</my-button>
     </div>
+    <my-dialog v-model:show="dialogVisible">
+      <station-form @add="addStation"></station-form>
+    </my-dialog>
     <pagination
       :totalPages="totalPages"
       :perPage="limit"
@@ -27,17 +31,20 @@
 
 <script>
 import StationTable from "@/components/StationTable.vue";
+import StationForm from "@/components/StationForm.vue";
 import Pagination from "@/components/Pagination.vue";
 import api from "@/services/api.js";
 export default {
   components: {
     StationTable,
     Pagination,
+    StationForm,
   },
   data() {
     return {
       stations: [],
       isLoading: false,
+      dialogVisible: false,
       selectedSort: "",
       searchQuery: "",
       page: 1,
@@ -55,6 +62,27 @@ export default {
     // Updates the current page
     changePage(pageNum) {
       this.page = pageNum;
+    },
+    showDialog() {
+      this.dialogVisible = true;
+    },
+    async addStation(station) {
+      try {
+        // Send a POST request to the server with the new station data
+        const response = await api.post("stations/create", station, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        console.log(response.data);
+
+        this.dialogVisible = false;
+
+        // Fetch the updated stations data
+        this.fetchStations();
+      } catch (error) {
+        console.log(error.response.data);
+      }
     },
     async fetchStations() {
       try {
@@ -118,6 +146,15 @@ export default {
 .app__btns {
   display: flex;
   justify-content: space-between;
-  margin: 15px 0;
+  margin: 19px 0 15px;
+  font-size: 14px;
+  height: 43px;
+}
+
+@media (max-width: 794px) {
+  .app__btns {
+    font-size: 12px;
+    height: 38px;
+  }
 }
 </style>
