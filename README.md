@@ -40,7 +40,7 @@ This web application displays information about bicycle stations and journeys ma
 
 ### Running the frontend
 
-1. Navigate to the project directory: `cd city-bike/frontend`
+1. Navigate to the frontend directory: `cd city-bike/frontend`
 2. Install the required packages: `npm install`
 3. Run the development server: `npm run dev`
 4. Access the application in your web browser at `http://127.0.0.1:3000`
@@ -49,10 +49,10 @@ This web application displays information about bicycle stations and journeys ma
 
 1. Make sure that the backend is running in a docker container
 2. Open the CLI in the docker container: `docker exec -it city-bike-backend-1 /bin/bash`
-3. To import data with stations, run the command: `php cli.php stations:import stations.csv`
-4. To import data with trips from the first file (`trips-1.csv`), run the command:: `php cli.php trips:import trips-1.csv`
-5. To import data with trips from the second file (`trips-2.csv`), run the command:: `php cli.php trips:import trips-2.csv`
-6. To import data with trips from the third file (`trips-3.csv`), run the command:: `php cli.php trips:import trips-3.csv`
+3. To import data with stations, run: `php cli.php stations:import stations.csv`
+4. To import data with trips from the first file (`trips-1.csv`), run: `php cli.php trips:import trips-1.csv`
+5. To import data with trips from the second file (`trips-2.csv`), run: `php cli.php trips:import trips-2.csv`
+6. To import data with trips from the third file (`trips-3.csv`), run: `php cli.php trips:import trips-3.csv`
 
 Please be patient as the data import process may take some time. Importing trip data takes about 5-7 minutes for each file. However, you can continue to use the app during the import process!
 
@@ -67,7 +67,7 @@ Please be patient as the data import process may take some time. Importing trip 
 #### Backend (PHPUnit)
 
 1. Make sure that the backend is running in docker container
-2. Open the cli in the backend directory in the docker container: `docker exec -it city-bike-backend-1 /bin/bash`
+2. Open the cli in the docker container: `docker exec -it city-bike-backend-1 /bin/bash`
 3. Run `composer test` to run the PHPUnit tests
 
 ## Technologies Used
@@ -81,6 +81,10 @@ Please be patient as the data import process may take some time. Importing trip 
 - Symfony Console (for building cli app in PHP)
 - Cypress (for e2e testing)
 - PHPUnit (for backend testing)
+
+I chose PHP and MySQL for the backend of this project because I had previous experience working with them in my past projects. However, I wanted to challenge myself and improve my skills, so I decided to use Vue.js for the frontend, even though I had only a limited experience with it before.
+
+In addition, I took this project as an opportunity to explore new tools and technologies. I experimented with Cypress for end-to-end testing and Docker for containerization, both of which were new to me. This allowed me to gain hands-on experience and broaden my skill set.
 
 ## Features
 
