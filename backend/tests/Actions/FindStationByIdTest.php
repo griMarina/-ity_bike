@@ -24,7 +24,8 @@ class FindStationByIdTest extends TestCase
     public function testItReturnsSuccessfulResponseWithStatus200(): void
     {
         // Define the expected station's data
-        $station = new Station(1, 'Test Station 1', '', '', 'Test Address 1', 'Test Address 1', '', '', '', 10, 60.123, 24.456);
+        $station = new Station('Test Station 1', '', '', 'Test Address 1', 'Test Address 1', '', '', '', 10, 60.123, 24.456);
+        $station->setId(1);
         $info = [
             'total_start' => 100,
             'total_end' => 200,

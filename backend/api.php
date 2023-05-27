@@ -2,19 +2,30 @@
 
 use Grimarina\CityBike\http\{Request, ErrorResponse};
 use Grimarina\CityBike\Exceptions\HttpException;
-use Grimarina\CityBike\Actions\Stations\{FindAllStations, FindStationById};
+use Grimarina\CityBike\Actions\Stations\{FindAllStations, FindStationById, CreateStation};
 use Grimarina\CityBike\Actions\Trips\{FindAllTrips};
 use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
+
+// Set CORS headers for preflight request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: http://127.0.0.1:3000');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+    header('HTTP/1.1 200 OK');
+    exit; // Terminate the script after sending the headers
+}
+
 
 // Set CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+// header('HTTP/1.1 200 OK');
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/config/config.php';
 
-$request = new Request($_GET, $_SERVER, file_get_contents('php://input'),);
+$request = new Request($_GET, $_SERVER, file_get_contents('php://input'));
 
 try {
     $path = $request->path();
@@ -42,6 +53,9 @@ $routes = [
         '/stations/show' => new FindAllStations(new StationsRepository($pdo)),
         '/station/show' => new FindStationById(new StationsRepository($pdo)),
         '/trips/show' => new FindAllTrips(new TripsRepository($pdo)),
+    ],
+    'POST' => [
+        '/stations/create' => new CreateStation(new StationsRepository($pdo)),
     ]
 ];
 

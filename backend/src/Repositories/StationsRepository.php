@@ -78,6 +78,31 @@ class StationsRepository
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
+    public function save(Station $station): void
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO stations (name_fi, name_sv, name_en, address_fi, address_sv, city_fi, city_sv, operator, capacity, coordinate_x, coordinate_y) VALUES (:name_fi, :name_sv, :name_en, :address_fi, :address_sv, :city_fi, :city_sv, :operator, :capacity, :coordinate_x, :coordinate_y)");
+
+        try {
+            $stmt->execute(
+                [
+                    ':name_fi' => (string) $station->getNameFi(),
+                    ':name_sv' => (string) $station->getNameSv(),
+                    ':name_en' => (string) $station->getNameEn(),
+                    ':address_fi' => (string) $station->getAddressFi(),
+                    ':address_sv' => (string) $station->getAddressSv(),
+                    ':city_fi' => (string) $station->getCityFi(),
+                    ':city_sv' => (string) $station->getCitySv(),
+                    ':operator' => (string) $station->getOperator(),
+                    ':capacity' => (int) $station->getCapacity(),
+                    ':coordinate_x' => (float) $station->getCoordinateX(),
+                    ':coordinate_y' => (float) $station->getCoordinateY()
+                ]
+            );
+        } catch (\Error $e) {
+            throw new InvalidArgumentException('Station contains invalid data.');
+        }
+    }
+
     public function importCsv(Reader $csv): int
     {
         // Insert rows into the table, ignoring any duplicates

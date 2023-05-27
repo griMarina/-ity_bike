@@ -36,8 +36,8 @@ class FindStationById implements ActionInterface
         // Prepare the response data and send a successful response
         return new SuccessfulResponse([
             'id' => $station->getId(),
-            'name' => $station->getName(),
-            'address' => $station->getAddress(),
+            'name' => $station->getNameFi(),
+            'address' => $station->getAddressFi(),
             'capacity' => $station->getCapacity(),
             'x' => $station->getCoordinateX(),
             'y' => $station->getCoordinateY(),

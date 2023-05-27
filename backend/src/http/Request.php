@@ -57,6 +57,7 @@ class Request
             throw new HttpException("Empty field: $field");
         }
 
+
         return $data[$field];
     }
 
