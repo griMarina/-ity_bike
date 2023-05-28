@@ -23,16 +23,23 @@ class StationsRepository
         return $stmt->fetch(\PDO::FETCH_COLUMN);
     }
 
-    // Get a paginated list of stations
+    // Get a list of stations
     public function getAll(int $page, int $limit): array
     {
-        $offset = ($page - 1) * $limit;
+        $query = "SELECT id, name_fi as `name`, address_fi as `address`, capacity, coordinate_x, coordinate_y FROM `stations` ORDER BY id ASC";
 
-        $stmt = $this->pdo->prepare("SELECT id, name_fi as `name`, address_fi as `address`, capacity, coordinate_x, coordinate_y FROM `stations` 
-        ORDER BY id ASC LIMIT :offset, :limit ;");
+        if ($limit !== 0) {
+            $query .= " LIMIT :offset, :limit ;";
+        }
 
-        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
-        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt = $this->pdo->prepare($query);
+
+        if ($limit !== 0) {
+            $offset = ($page - 1) * $limit;
+
+            $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        }
 
         $stmt->execute();
 

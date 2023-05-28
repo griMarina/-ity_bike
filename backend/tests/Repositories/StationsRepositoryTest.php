@@ -139,8 +139,7 @@ class StationsRepositoryTest extends TestCase
         $this->connectionStub
             ->expects($this->once())
             ->method('prepare')
-            ->with("SELECT id, name_fi as `name`, address_fi as `address`, capacity, coordinate_x, coordinate_y FROM `stations` 
-        ORDER BY id ASC LIMIT :offset, :limit ;")
+            ->with("SELECT id, name_fi as `name`, address_fi as `address`, capacity, coordinate_x, coordinate_y FROM `stations` ORDER BY id ASC LIMIT :offset, :limit ;")
             ->willReturn($this->statementMock);
 
         $page = 1;

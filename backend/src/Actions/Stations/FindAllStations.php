@@ -25,7 +25,7 @@ class FindAllStations implements ActionInterface
         }
 
         // Validate the 'page' and 'limit' parameters
-        if (!filter_var($page, FILTER_VALIDATE_INT) || !filter_var($limit, FILTER_VALIDATE_INT)) {
+        if (!filter_var($page, FILTER_VALIDATE_INT) || (!filter_var($limit, FILTER_VALIDATE_INT) && $limit !== "0")) {
             return new ErrorResponse('Invalid parameters.');
         }
 

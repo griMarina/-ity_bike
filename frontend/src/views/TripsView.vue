@@ -10,8 +10,11 @@
         placeholder="Search trip"
       ></my-input>
       <my-select v-model="selectedSort" :options="sortOptions"></my-select>
-      <my-button class="add-btn">New trip</my-button>
+      <my-button class="add-btn" @click="showDialog">New trip</my-button>
     </div>
+    <my-dialog v-model:show="dialogVisible">
+      <trip-form @add="addTrip"></trip-form>
+    </my-dialog>
     <pagination
       :totalPages="totalPages"
       :perPage="limit"
@@ -25,17 +28,20 @@
 
 <script>
 import TripTable from "@/components/TripTable.vue";
+import TripForm from "@/components/TripForm.vue";
 import Pagination from "@/components/Pagination.vue";
 import api from "@/services/api.js";
 export default {
   components: {
     TripTable,
+    TripForm,
     Pagination,
   },
   data() {
     return {
       trips: [],
       isLoading: false,
+      dialogVisible: false,
       selectedSort: "",
       searchQuery: "",
       page: 1,
@@ -53,6 +59,26 @@ export default {
     // Updates the current page
     changePage(pageNum) {
       this.page = pageNum;
+    },
+    showDialog() {
+      this.dialogVisible = true;
+    },
+    async addTrip(trip) {
+      try {
+        // Send a POST request to the server with the new trip data
+        const response = await api.post("trips/create", trip, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        this.dialogVisible = false;
+
+        // Fetch the updated trips data
+        this.fetchTrips();
+      } catch (error) {
+        console.log(error.response.data);
+      }
     },
     async fetchTrips() {
       try {

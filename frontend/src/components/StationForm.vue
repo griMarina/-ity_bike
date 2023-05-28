@@ -64,6 +64,7 @@
       type="number"
       placeholder="capacity"
       min="0"
+      required
     />
     <my-button class="btn-add" type="submit">Add station</my-button>
     <p v-show="error">Invalid address</p>
@@ -85,7 +86,7 @@ export default {
         city_fi: "",
         city_sv: "",
         operator: "",
-        capacity: 0,
+        capacity: "",
         coordinate_x: null,
         coordinate_y: null,
       },
@@ -107,7 +108,7 @@ export default {
         city_fi: "",
         city_sv: "",
         operator: "",
-        capacity: 0,
+        capacity: "",
         coordinate_x: null,
         coordinate_y: null,
       };
