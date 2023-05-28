@@ -5,6 +5,8 @@ namespace Grimarina\CityBike\Repositories;
 use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
+use Grimarina\CityBike\Entities\Trip;
+use InvalidArgumentException;
 
 class TripsRepository
 {
@@ -34,6 +36,28 @@ class TripsRepository
         $stmt->execute();
 
         return  $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function save(Trip $trip): void
+    {
+        $stmt = $this->pdo->prepare("INSERT IGNORE INTO trips (departure, `return`, departure_station_id, departure_station_name, return_station_id, return_station_name, distance, duration) VALUES (:departure, :return, :departure_station_id, :departure_station_name, :return_station_id, :return_station_name, :distance, :duration)");
+
+        try {
+            $stmt->execute(
+                [
+                    ':departure' => (string) $trip->getDeparture(),
+                    ':return' => (string) $trip->getReturn(),
+                    ':departure_station_id' => (int) $trip->getDepartureStationId(),
+                    ':departure_station_name' => (string) $trip->getDepartureStationName(),
+                    ':return_station_id' => (int) $trip->getReturnStationId(),
+                    ':return_station_name' => (string) $trip->getReturnStationName(),
+                    ':distance' => (int) $trip->getDistance(),
+                    ':duration' => (int) $trip->getDuration(),
+                ]
+            );
+        } catch (\Error $e) {
+            throw new InvalidArgumentException('Trip contains invalid data.');
+        }
     }
 
     public function importCsv(Reader $csv): int

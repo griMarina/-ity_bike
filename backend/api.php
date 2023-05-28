@@ -3,7 +3,7 @@
 use Grimarina\CityBike\http\{Request, ErrorResponse};
 use Grimarina\CityBike\Exceptions\HttpException;
 use Grimarina\CityBike\Actions\Stations\{FindAllStations, FindStationById, CreateStation};
-use Grimarina\CityBike\Actions\Trips\{FindAllTrips};
+use Grimarina\CityBike\Actions\Trips\{FindAllTrips, CreateTrip};
 use Grimarina\CityBike\Repositories\{StationsRepository, TripsRepository};
 
 // Set CORS headers for preflight request
@@ -56,6 +56,7 @@ $routes = [
     ],
     'POST' => [
         '/stations/create' => new CreateStation(new StationsRepository($pdo)),
+        '/trips/create' => new CreateTrip(new TripsRepository($pdo)),
     ]
 ];
 

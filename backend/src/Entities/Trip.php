@@ -4,9 +4,9 @@ namespace Grimarina\CityBike\Entities;
 
 class Trip
 {
+    private int $id;
 
     public function __construct(
-        private int $id = 0,
         private string $departure = '',
         private string $return = '',
         private int $departure_station_id = 0,
