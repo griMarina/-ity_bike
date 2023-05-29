@@ -113,6 +113,10 @@ In addition, I took this project as an opportunity to explore new tools and tech
 
 ![Single Station View](media/station.png)
 
+### New Trip Creation
+
+![New Trip Creation](media/new_trip.png)
+
 ## Acknowledgments
 
 The data about bicycle stations and journeys is owned by City Bike Finland and HSL. [https://www.avoindata.fi/data/en/dataset/hsl-n-kaupunkipyoraasemat/resource/a23eef3a-cc40-4608-8aa2-c730d17e8902](https://www.avoindata.fi/data/en/dataset/hsl-n-kaupunkipyoraasemat/resource/a23eef3a-cc40-4608-8aa2-c730d17e8902)
