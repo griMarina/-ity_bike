@@ -57,15 +57,17 @@
     <my-input
       class="input"
       v-model="trip.distance"
-      type="text"
+      type="number"
       placeholder="distance in metres"
+      min="10"
       required
     />
     <my-input
       class="input"
       v-model="trip.duration"
-      type="text"
+      type="number"
       placeholder="duration in seconds"
+      min="10"
       required
     />
     <my-button class="btn-add" type="submit">Add trip</my-button>
@@ -156,17 +158,22 @@ export default {
 .form {
   display: flex;
   flex-direction: column;
-  text-align: center;
+  font-family: inherit;
 }
 .form__header {
   margin-bottom: 15px;
   color: #257bc9;
   font-size: 20px;
+  text-align: center;
+}
+
+.form label {
+  font-family: inherit;
+  margin-left: 15px;
 }
 .input {
   margin-bottom: 15px;
 }
-
 .select {
   min-width: 30%;
   padding: 10px 15px;
