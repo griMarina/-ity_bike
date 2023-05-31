@@ -13,7 +13,8 @@
       <my-button class="add-btn" @click="showDialog">New trip</my-button>
     </div>
     <my-dialog v-model:show="dialogVisible">
-      <trip-form @add="addTrip"></trip-form>
+      <trip-form @add="addTrip" v-if="!isAdded"></trip-form>
+      <p v-else class="message">New trip has been added!</p>
     </my-dialog>
     <pagination
       :totalPages="totalPages"
@@ -42,6 +43,7 @@ export default {
       trips: [],
       isLoading: false,
       dialogVisible: false,
+      isAdded: false,
       selectedSort: "",
       searchQuery: "",
       page: 1,
@@ -62,6 +64,7 @@ export default {
     },
     showDialog() {
       this.dialogVisible = true;
+      this.isAdded = false;
     },
     async addTrip(trip) {
       try {
@@ -72,10 +75,7 @@ export default {
           },
         });
 
-        this.dialogVisible = false;
-
-        // Fetch the updated trips data
-        this.fetchTrips();
+        this.isAdded = true;
       } catch (error) {
         console.log(error.response.data);
       }
@@ -147,6 +147,12 @@ export default {
   margin: 19px 0 15px;
   font-size: 14px;
   height: 43px;
+}
+.message {
+  text-align: center;
+  color: #257bc9;
+  font-size: 18px;
+  padding: 20px;
 }
 
 @media (max-width: 794px) {

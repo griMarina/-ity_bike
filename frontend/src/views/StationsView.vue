@@ -13,7 +13,8 @@
       <my-button @click="showDialog">New station</my-button>
     </div>
     <my-dialog v-model:show="dialogVisible">
-      <station-form @add="addStation"></station-form>
+      <station-form @add="addStation" v-if="!isAdded"></station-form>
+      <p v-else class="message">New station has been added!</p>
     </my-dialog>
     <pagination
       :totalPages="totalPages"
@@ -45,6 +46,7 @@ export default {
       stations: [],
       isLoading: false,
       dialogVisible: false,
+      isAdded: false,
       selectedSort: "",
       searchQuery: "",
       page: 1,
@@ -65,6 +67,7 @@ export default {
     },
     showDialog() {
       this.dialogVisible = true;
+      this.isAdded = false;
     },
     async addStation(station) {
       try {
@@ -74,12 +77,8 @@ export default {
             "Content-Type": "application/json",
           },
         });
-        console.log(response.data);
 
-        this.dialogVisible = false;
-
-        // Fetch the updated stations data
-        this.fetchStations();
+        this.isAdded = true;
       } catch (error) {
         console.log(error.response.data);
       }
@@ -149,6 +148,13 @@ export default {
   margin: 19px 0 15px;
   font-size: 14px;
   height: 43px;
+}
+
+.message {
+  text-align: center;
+  color: #257bc9;
+  font-size: 18px;
+  padding: 20px;
 }
 
 @media (max-width: 794px) {
