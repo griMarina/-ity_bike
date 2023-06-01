@@ -7,6 +7,8 @@ This web application displays information about bicycle stations and journeys ma
 #
 
 <p align="center">
+    <a href="https://citybike.space">View demo</a>
+    ·
     <a href="#prerequisites">Prerequisites</a>
     ·
     <a href="#running-the-backend">Backend</a>
