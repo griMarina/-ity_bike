@@ -93,7 +93,9 @@ In addition, I took this project as an opportunity to explore new tools and tech
 - Data import from the CSV files to the MySQL database
 - Data validation before importing
 - Station list display (pagination, ordering by column, searching)
+- Possibility to add new city bike stations
 - Journey list display (pagination, ordering by column, searching)
+- Possibility to add new journeys
 - Single station display:
   - Total number of journeys starting from the station
   - Total number of journeys ending at the station
